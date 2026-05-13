@@ -1,9 +1,11 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { Countdown } from "@/components/Countdown";
 import { CommunityStrip } from "@/components/CommunityStrip";
 import { SeasonGrid } from "@/components/SeasonGrid";
 import { StageDetail } from "@/components/StageDetail";
 import { ScrollProgress } from "@/components/ScrollProgress";
+import { MagneticButton } from "@/components/MagneticButton";
 import { Slogan } from "@/components/Slogan";
 import { WhatsAppIcon } from "@/components/icons";
 import { useSelectedStage } from "@/lib/useSelectedStage";
@@ -71,62 +73,80 @@ export default function App() {
               className="mt-12 md:mt-0"
             />
 
-            {/* POSTPONED PANEL — replaces date stamp + countdown + register CTA */}
+            {/* DATE STAMP — high prominence */}
             <div className="mt-10 flex flex-col gap-8 md:mt-0 md:flex-row md:items-end md:justify-between md:gap-12">
-              {/* Left: postponed notice */}
+              {/* Left: date + venue */}
               <div className="flex-1 max-w-2xl">
-                <div className="inline-flex items-center gap-2 rounded-full border border-amber-400/70 bg-amber-400/10 px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-amber-300">
-                  <span className="h-2 w-2 rounded-full bg-amber-300" />
-                  {site.postponed.pill}
+                <div className="flex items-end gap-5">
+                  <span className="font-display text-7xl leading-none text-[var(--color-volt)] md:text-9xl">
+                    {site.event.day}
+                  </span>
+                  <div className="pb-2">
+                    <p className="font-display text-3xl leading-none md:text-5xl">
+                      {site.event.monthShort}
+                    </p>
+                    <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-fg-muted)] md:text-sm">
+                      {site.event.weekday} · {site.event.year}
+                    </p>
+                  </div>
+                  <span
+                    aria-hidden
+                    className="ml-2 hidden h-12 w-px bg-[var(--color-border-strong)] md:block md:h-20"
+                  />
+                  <p className="hidden pb-2 font-mono text-sm uppercase tracking-widest text-[var(--color-fg-muted)] md:block">
+                    {site.event.timeWindow}
+                  </p>
                 </div>
 
-                <h2 className="mt-6 font-display text-4xl leading-[0.95] text-amber-300 md:text-6xl">
-                  {site.postponed.headline}
-                </h2>
-
-                <p className="mt-5 max-w-xl text-base leading-relaxed text-[var(--color-fg)] md:text-lg">
-                  {site.postponed.body}
-                </p>
-
-                {/* Venue → maps link (kept for context, dimmed) */}
+                {/* Venue → maps link */}
                 <a
                   href={site.event.mapsHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group mt-6 inline-flex items-baseline gap-3 link-uline opacity-70 hover:opacity-100"
+                  className="group mt-6 inline-flex items-baseline gap-3 link-uline"
                 >
                   <span aria-hidden className="text-[var(--color-volt)]">📍</span>
-                  <span className="font-display text-xl leading-tight md:text-2xl">
+                  <span className="font-display text-2xl leading-tight md:text-3xl">
                     {site.event.venue}
                   </span>
                   <span className="text-sm uppercase tracking-widest text-[var(--color-fg-muted)]">
                     {site.event.city}
                   </span>
+                  <span
+                    aria-hidden
+                    className="ml-1 text-sm text-[var(--color-volt)] transition-transform group-hover:translate-x-1"
+                  >
+                    ↗
+                  </span>
                 </a>
+
+                <p className="mt-4 md:hidden font-mono text-xs uppercase tracking-widest text-[var(--color-fg-muted)]">
+                  {site.event.timeWindow}
+                </p>
               </div>
 
-              {/* Right: stay-informed CTAs */}
+              {/* Right: countdown + CTAs */}
               <div className="flex flex-col gap-5 md:items-end">
-                <p className="font-mono text-[11px] uppercase tracking-widest text-[var(--color-fg-muted)]">
-                  Stay informed
-                </p>
+                <Countdown targetISO={site.event.dateISO} />
                 <div className="flex flex-col gap-3 md:flex-row">
+                  <MagneticButton
+                    href={site.cta.primary.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-volt justify-center"
+                    strength={0.3}
+                  >
+                    {site.cta.primary.label}
+                    <span aria-hidden>→</span>
+                  </MagneticButton>
                   <a
                     href={site.channels.whatsapp.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn-volt justify-center gap-2"
+                    className="btn-ghost justify-center gap-2"
                   >
-                    <WhatsAppIcon className="h-4 w-4" />
-                    Get the new date
-                  </a>
-                  <a
-                    href={site.channels.instagram[0].href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-ghost justify-center"
-                  >
-                    {site.channels.instagram[0].handle}
+                    <WhatsAppIcon className="h-4 w-4 text-[var(--color-volt)]" />
+                    Join WhatsApp
                   </a>
                 </div>
               </div>
@@ -141,7 +161,7 @@ export default function App() {
               <span aria-hidden className="text-[var(--color-border-strong)]">/</span>
               <span>Family Friendly</span>
               <span aria-hidden className="text-[var(--color-border-strong)]">/</span>
-              <span className="text-amber-300">New Date Soon</span>
+              <span>Spectators Free</span>
             </div>
           </div>
         </section>
