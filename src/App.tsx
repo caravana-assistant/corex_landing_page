@@ -7,6 +7,10 @@ import { StageDetail } from "@/components/StageDetail";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { MagneticButton } from "@/components/MagneticButton";
 import { Slogan } from "@/components/Slogan";
+import { Divisions } from "@/components/Divisions";
+import { Workout } from "@/components/Workout";
+import { Schedule } from "@/components/Schedule";
+import { Venue } from "@/components/Venue";
 import { WhatsAppIcon } from "@/components/icons";
 import { useSelectedStage } from "@/lib/useSelectedStage";
 import { site } from "@/lib/site";
@@ -155,7 +159,7 @@ export default function App() {
 
           <div className="relative border-t border-[var(--color-border)]">
             <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-4 px-5 py-4 text-xs uppercase tracking-widest text-[var(--color-fg-muted)] md:px-10">
-              <span>11 Divisions</span>
+              <span>10 Divisions</span>
               <span aria-hidden className="text-[var(--color-border-strong)]">/</span>
               <span>For Time</span>
               <span aria-hidden className="text-[var(--color-border-strong)]">/</span>
@@ -186,46 +190,10 @@ export default function App() {
         )}
         <CommunityStrip />
 
-        {/* Phase 1 placeholder for upcoming sections */}
-        <section className="border-b border-[var(--color-border)] py-24 md:py-32">
-          <div className="mx-auto max-w-[1440px] px-5 md:px-10">
-            <p className="eyebrow mb-8">Coming next</p>
-            <ul className="flex flex-wrap items-center gap-x-5 gap-y-3 md:gap-x-7">
-              {[
-                "11 Divisions",
-                "Race Format",
-                "Schedule",
-                "Registration",
-                "Venue",
-                "Prizes",
-                "Downloads",
-                "FAQ",
-              ].map((item, i, arr) => {
-                const colors = [
-                  "text-[var(--color-fg)]",
-                  "text-[var(--color-volt)]",
-                  "text-[var(--color-fg-muted)]",
-                ];
-                return (
-                  <li
-                    key={item}
-                    className="flex items-center gap-x-5 whitespace-nowrap font-display text-3xl leading-none md:text-5xl lg:text-6xl"
-                  >
-                    <span className={colors[i % colors.length]}>{item}</span>
-                    {i < arr.length - 1 && (
-                      <span
-                        aria-hidden
-                        className="text-[var(--color-border-strong)]"
-                      >
-                        ◆
-                      </span>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        </section>
+        <Divisions />
+        <Workout />
+        <Schedule />
+        <Venue />
       </main>
       <Footer />
     </div>
