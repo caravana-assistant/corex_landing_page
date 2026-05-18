@@ -70,10 +70,10 @@ export const stages: Stage[] = [
     numberPadded: "03",
     label: "STAGE 03",
     status: "loading",
-    date: "May 30, 2026",
-    dateShort: "30 MAY",
+    date: "Jun 06, 2026",
+    dateShort: "06 JUN",
     venue: undefined, // venue still being confirmed
-    city: "Al Dhafra",
+    city: "Al Dhannah",
     photos: [],
     results: [],
   },

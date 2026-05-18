@@ -9,6 +9,7 @@ import { MagneticButton } from "@/components/MagneticButton";
 import { Slogan } from "@/components/Slogan";
 import { Divisions } from "@/components/Divisions";
 import { Workout } from "@/components/Workout";
+import { Rulebook } from "@/components/Rulebook";
 import { Schedule } from "@/components/Schedule";
 import { Venue } from "@/components/Venue";
 import { WhatsAppIcon } from "@/components/icons";
@@ -192,6 +193,7 @@ export default function App() {
 
         <Divisions />
         <Workout />
+        <Rulebook />
         <Schedule />
         <Venue />
       </main>

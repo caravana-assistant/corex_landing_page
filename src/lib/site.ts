@@ -47,10 +47,10 @@ export const site = {
   },
   nav: [
     { label: "Stages", href: "#season" },
-    { label: "Stage Detail", href: "#stage-detail" },
-    { label: "Community", href: "#community" },
+    { label: "Workout", href: "#workout" },
+    { label: "Rulebook", href: "#rulebook" },
     { label: "Schedule", href: "#schedule" },
-    { label: "FAQ", href: "#faq" },
+    { label: "Venue", href: "#venue" },
   ],
   channels: {
     email: "CoreX@adsc.adgov.gov.ae",
