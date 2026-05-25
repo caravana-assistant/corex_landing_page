@@ -3,19 +3,20 @@ import { supabase } from './supabase';
 import type { DivisionResult, PodiumRow } from './stages';
 
 const DIVISION_LABELS: Record<string, string> = {
-  men_open: 'Men Open',
-  women_open: 'Women Open',
-  double_men: 'Doubles Men',
-  double_women: 'Doubles Women',
-  double_mixed: 'Doubles Mixed',
+  open_m: 'Open Men',
+  open_w: 'Open Women',
+  double_m: 'Double Men',
+  double_w: 'Double Women',
   relay: 'Relay',
-  boys_14_17: 'Boys 14–17',
-  girls_14_17: 'Girls 14–17',
-  boys_11_13: 'Boys 11–13',
-  girls_11_13: 'Girls 11–13',
+  pro_m: 'Pro Men',
+  pro_w: 'Pro Women',
   kids_7_10: 'Kids 7–10',
-  men_pod: 'Men POD',
-  women_pod: 'Women POD',
+  boys_11_13: 'Youth Boys (11–13)',
+  girls_11_13: 'Youth Girls (11–13)',
+  boys_14_17: 'Junior Boys (14–17)',
+  girls_14_17: 'Junior Girls (14–17)',
+  pod_m: 'POD Men',
+  pod_w: 'POD Women',
 };
 
 const DIVISION_ORDER = Object.keys(DIVISION_LABELS);
@@ -34,12 +35,21 @@ interface RawResult {
   result_time_seconds: number;
 }
 
+export interface FullResultRow {
+  rank: number;
+  name: string;
+  division: string;
+  time: string;
+}
+
 export function useResults(eventId: string | undefined): {
   results: DivisionResult[];
+  allResults: FullResultRow[];
   loading: boolean;
   published: boolean;
 } {
   const [results, setResults] = useState<DivisionResult[]>([]);
+  const [allResults, setAllResults] = useState<FullResultRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [published, setPublished] = useState(false);
 
@@ -66,6 +76,7 @@ export function useResults(eventId: string | undefined): {
       if (!pubData?.published) {
         setPublished(false);
         setResults([]);
+        setAllResults([]);
         setLoading(false);
         return;
       }
@@ -83,6 +94,7 @@ export function useResults(eventId: string | undefined): {
 
       if (!rows || rows.length === 0) {
         setResults([]);
+        setAllResults([]);
         setLoading(false);
         return;
       }
@@ -115,7 +127,22 @@ export function useResults(eventId: string | undefined): {
         });
       }
 
+      // Build full results table (all finishers, ranked per division)
+      const full: FullResultRow[] = [];
+      for (const div of sortedDivs) {
+        const entries = byDiv.get(div)!;
+        entries.forEach((r, i) => {
+          full.push({
+            rank: i + 1,
+            name: r.full_name ?? `${r.first_name} ${r.last_name}`.trim(),
+            division: DIVISION_LABELS[div] ?? div,
+            time: formatTime(r.result_time_seconds),
+          });
+        });
+      }
+
       setResults(divResults);
+      setAllResults(full);
       setLoading(false);
     }
 
@@ -123,5 +150,5 @@ export function useResults(eventId: string | undefined): {
     return () => { cancelled = true; };
   }, [eventId]);
 
-  return { results, loading, published };
+  return { results, allResults, loading, published };
 }

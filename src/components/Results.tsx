@@ -1,12 +1,16 @@
+import { useState } from "react";
 import type { DivisionResult, Stage } from "@/lib/stages";
-import { useResults } from "@/lib/useResults";
+import { useResults, type FullResultRow } from "@/lib/useResults";
 
 type Props = { stage: Stage };
 
+type View = "podium" | "full";
+
 export function Results({ stage }: Props) {
-  const { results: liveResults, loading: liveLoading, published } = useResults(stage.eventId);
+  const { results: liveResults, allResults, loading: liveLoading, published } = useResults(stage.eventId);
   const results = published ? liveResults : stage.results;
   const isLoading = stage.eventId ? liveLoading : false;
+  const [view, setView] = useState<View>("podium");
 
   const hasResults = results.length > 0;
   const headline = isLoading
@@ -19,24 +23,51 @@ export function Results({ stage }: Props) {
 
   return (
     <div>
-      <header className="mb-8 flex flex-col gap-2 md:mb-10 md:flex-row md:items-end md:justify-between">
-        <div>
-          <p className="eyebrow mb-2">{stage.label} · Podium</p>
-          <h3 className="font-display text-3xl leading-none md:text-5xl">
-            {headline}
-          </h3>
+      <header className="mb-8 flex flex-col gap-4 md:mb-10">
+        <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="eyebrow mb-2">{stage.label} · Results</p>
+            <h3 className="font-display text-3xl leading-none md:text-5xl">
+              {headline}
+            </h3>
+          </div>
+          {hasResults && !isLoading && (
+            <div className="flex gap-1">
+              <button
+                type="button"
+                onClick={() => setView("podium")}
+                className={`font-mono text-[11px] uppercase tracking-[0.18em] px-4 py-2 border transition-colors ${
+                  view === "podium"
+                    ? "border-[var(--color-volt)] bg-[var(--color-volt)]/10 text-[var(--color-volt)]"
+                    : "border-[var(--color-border-strong)] text-[var(--color-fg-muted)] hover:border-[var(--color-fg-muted)]"
+                }`}
+              >
+                Podium
+              </button>
+              <button
+                type="button"
+                onClick={() => setView("full")}
+                className={`font-mono text-[11px] uppercase tracking-[0.18em] px-4 py-2 border transition-colors ${
+                  view === "full"
+                    ? "border-[var(--color-volt)] bg-[var(--color-volt)]/10 text-[var(--color-volt)]"
+                    : "border-[var(--color-border-strong)] text-[var(--color-fg-muted)] hover:border-[var(--color-fg-muted)]"
+                }`}
+              >
+                All Results
+              </button>
+            </div>
+          )}
         </div>
-        <p className="text-xs uppercase tracking-widest text-[var(--color-fg-muted)]">
-          Top 3 per division
-        </p>
       </header>
 
       {isLoading ? (
         <LoadingShimmer />
       ) : results.length === 0 ? (
         <EmptyResults stage={stage} />
-      ) : (
+      ) : view === "podium" ? (
         <ResultsGrid results={results} />
+      ) : (
+        <FullResultsTable rows={allResults} />
       )}
     </div>
   );
@@ -76,6 +107,84 @@ function ResultsGrid({ results }: { results: DivisionResult[] }) {
             ))}
           </ol>
         </article>
+      ))}
+    </div>
+  );
+}
+
+function FullResultsTable({ rows }: { rows: FullResultRow[] }) {
+  // Group by division for section headers
+  const sections: { division: string; rows: FullResultRow[] }[] = [];
+  let currentDiv = "";
+  for (const row of rows) {
+    if (row.division !== currentDiv) {
+      currentDiv = row.division;
+      sections.push({ division: currentDiv, rows: [] });
+    }
+    sections[sections.length - 1].rows.push(row);
+  }
+
+  return (
+    <div className="border border-[var(--color-border)] bg-[var(--color-surface)] overflow-hidden">
+      {/* Table header */}
+      <div className="grid grid-cols-[3rem_1fr_auto_5rem] md:grid-cols-[3rem_1fr_12rem_5rem] gap-x-4 bg-[var(--color-bg)] px-5 py-3 border-b border-[var(--color-border)]">
+        <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)] text-center">#</span>
+        <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)]">Name</span>
+        <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)] hidden md:block">Division</span>
+        <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)] text-right">Time</span>
+      </div>
+
+      {sections.map((section) => (
+        <div key={section.division}>
+          {/* Division header */}
+          <div className="border-b border-[var(--color-border)] bg-[var(--color-bg)] px-5 py-2.5">
+            <span className="font-display text-sm uppercase tracking-wide text-[var(--color-volt)]">
+              {section.division}
+            </span>
+            <span className="ml-3 font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-faint)]">
+              {section.rows.length} finisher{section.rows.length !== 1 ? "s" : ""}
+            </span>
+          </div>
+
+          {/* Rows */}
+          {section.rows.map((row, i) => (
+            <div
+              key={`${section.division}-${row.rank}`}
+              className={`grid grid-cols-[3rem_1fr_auto_5rem] md:grid-cols-[3rem_1fr_12rem_5rem] gap-x-4 px-5 py-2.5 border-b border-[var(--color-border)] last:border-b-0 transition-colors hover:bg-[var(--color-surface-2,rgba(255,255,255,0.02))] ${
+                i % 2 === 0 ? "" : "bg-[rgba(255,255,255,0.01)]"
+              }`}
+            >
+              <span
+                className={`font-display text-lg leading-none text-center ${
+                  row.rank === 1
+                    ? "text-[var(--color-volt)]"
+                    : row.rank <= 3
+                      ? "text-[var(--color-fg)]"
+                      : "text-[var(--color-fg-muted)]"
+                }`}
+              >
+                {row.rank}
+              </span>
+              <span
+                className={`text-sm truncate ${
+                  row.rank <= 3 ? "font-semibold text-[var(--color-fg)]" : "text-[var(--color-fg-muted)]"
+                }`}
+              >
+                {row.name}
+              </span>
+              <span className="font-mono text-xs text-[var(--color-fg-faint)] hidden md:block">
+                {row.division}
+              </span>
+              <span
+                className={`font-mono text-xs text-right ${
+                  row.rank <= 3 ? "text-[var(--color-fg)]" : "text-[var(--color-fg-muted)]"
+                }`}
+              >
+                {row.time}
+              </span>
+            </div>
+          ))}
+        </div>
       ))}
     </div>
   );
@@ -131,60 +240,30 @@ function EmptyResults({ stage }: { stage: Stage }) {
     return <LoadingShimmer />;
   }
 
-  // Completed or current — placeholder cards with TBA
   const placeholderDivisions =
     stage.number === 1
-      ? [
-          "Pro Men",
-          "Pro Women",
-          "Open Men",
-          "Open Women",
-          "Doubles Men",
-          "Doubles Women",
-        ]
-      : [
-          "Open Men",
-          "Open Women",
-          "Doubles Men",
-          "Doubles Women",
-          "Relay",
-          "POD Men",
-        ];
+      ? ["Pro Men", "Pro Women", "Open Men", "Open Women", "Doubles Men", "Doubles Women"]
+      : ["Open Men", "Open Women", "Doubles Men", "Doubles Women", "Relay", "POD Men"];
 
   return (
-    <div>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
-        {placeholderDivisions.map((div) => (
-          <article
-            key={div}
-            aria-hidden
-            className="border border-[var(--color-border)] bg-[var(--color-surface)] p-6"
-          >
-            <p className="eyebrow mb-4">{div}</p>
-            <ol className="space-y-2.5">
-              {[1, 2, 3].map((rank) => (
-                <li
-                  key={rank}
-                  className="flex items-baseline gap-3 border-b border-[var(--color-border)] pb-2 last:border-b-0 last:pb-0"
-                >
-                  <span
-                    className={`font-display text-2xl leading-none ${
-                      rank === 1
-                        ? "text-[var(--color-volt)]"
-                        : "text-[var(--color-fg-faint)]"
-                    }`}
-                  >
-                    {rank}
-                  </span>
-                  <span className="flex-1 truncate font-mono text-xs uppercase tracking-widest text-[var(--color-fg-faint)]">
-                    To be announced
-                  </span>
-                </li>
-              ))}
-            </ol>
-          </article>
-        ))}
-      </div>
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
+      {placeholderDivisions.map((div) => (
+        <article key={div} aria-hidden className="border border-[var(--color-border)] bg-[var(--color-surface)] p-6">
+          <p className="eyebrow mb-4">{div}</p>
+          <ol className="space-y-2.5">
+            {[1, 2, 3].map((rank) => (
+              <li key={rank} className="flex items-baseline gap-3 border-b border-[var(--color-border)] pb-2 last:border-b-0 last:pb-0">
+                <span className={`font-display text-2xl leading-none ${rank === 1 ? "text-[var(--color-volt)]" : "text-[var(--color-fg-faint)]"}`}>
+                  {rank}
+                </span>
+                <span className="flex-1 truncate font-mono text-xs uppercase tracking-widest text-[var(--color-fg-faint)]">
+                  To be announced
+                </span>
+              </li>
+            ))}
+          </ol>
+        </article>
+      ))}
     </div>
   );
 }
