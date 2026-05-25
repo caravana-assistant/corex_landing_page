@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "bundle": "powershell -File scripts/bundle-for-it.ps1",
     "lint": "eslint .",
     "preview": "vite preview"
   },

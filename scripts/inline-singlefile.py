@@ -49,7 +49,7 @@ def main() -> int:
         print(f"[!] Run BUILD_SINGLE=1 pnpm build first ({SOURCE} missing)", file=sys.stderr)
         return 1
 
-    html = SOURCE.read_text()
+    html = SOURCE.read_text(encoding="utf-8")
 
     seen: dict[str, str] = {}
     misses: list[str] = []
@@ -70,8 +70,8 @@ def main() -> int:
         print(f"[!] Could not inline: {sorted(set(misses))}", file=sys.stderr)
         return 2
 
-    OUT.write_text(out)
-    print(f"✓ Inlined {len(seen)} asset(s)")
+    OUT.write_text(out, encoding="utf-8")
+    print(f"[OK] Inlined {len(seen)} asset(s)")
     print(f"  Source : {SOURCE.relative_to(ROOT)} ({SOURCE.stat().st_size:,} bytes)")
     print(f"  Output : {OUT.relative_to(ROOT)} ({OUT.stat().st_size:,} bytes)")
     return 0
