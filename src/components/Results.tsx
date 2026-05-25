@@ -83,28 +83,29 @@ function ResultsGrid({ results }: { results: DivisionResult[] }) {
         >
           <p className="eyebrow mb-4">{row.division}</p>
           <ol className="space-y-2.5">
-            {row.podium.map((p) => (
-              <li
-                key={p.rank}
-                className="flex items-baseline gap-3 border-b border-[var(--color-border)] pb-2 last:border-b-0 last:pb-0"
-              >
-                <span
-                  className={`font-display text-2xl leading-none ${
+            {row.podium.map((p, i) => {
+              const medalColor = p.rank === 1 ? "#FFD700" : p.rank === 2 ? "#C0C0C0" : "#CD7F32";
+              return (
+                <li
+                  key={`${p.rank}-${i}`}
+                  className={`flex items-center gap-3 border-b border-[var(--color-border)] pb-2 last:border-b-0 last:pb-0 ${
                     p.rank === 1
-                      ? "text-[var(--color-volt)]"
-                      : "text-[var(--color-fg-muted)]"
+                      ? "border-l-2 border-l-[#FFD700] pl-2 bg-[rgba(255,215,0,0.05)]"
+                      : p.rank === 2
+                        ? "border-l-2 border-l-[#C0C0C0] pl-2 bg-[rgba(192,192,192,0.04)]"
+                        : "border-l-2 border-l-[#CD7F32] pl-2 bg-[rgba(205,127,50,0.04)]"
                   }`}
                 >
-                  {p.rank}
-                </span>
-                <span className="flex-1 truncate text-base">{p.name}</span>
-                {p.time && (
-                  <span className="font-mono text-xs uppercase tracking-widest text-[var(--color-fg-muted)]">
-                    {p.time}
-                  </span>
-                )}
-              </li>
-            ))}
+                  <MedalIcon color={medalColor} rank={p.rank} />
+                  <span className="flex-1 truncate text-base">{p.name}</span>
+                  {p.time && (
+                    <span className="font-mono text-xs uppercase tracking-widest text-[var(--color-fg-muted)]">
+                      {p.time}
+                    </span>
+                  )}
+                </li>
+              );
+            })}
           </ol>
         </article>
       ))}
@@ -147,23 +148,36 @@ function FullResultsTable({ rows }: { rows: FullResultRow[] }) {
           </div>
 
           {/* Rows */}
-          {section.rows.map((row, i) => (
+          {section.rows.map((row, i) => {
+            const medalBg =
+              row.rank === 1
+                ? "bg-[rgba(255,215,0,0.08)] border-l-2 border-l-[#FFD700]"
+                : row.rank === 2
+                  ? "bg-[rgba(192,192,192,0.06)] border-l-2 border-l-[#C0C0C0]"
+                  : row.rank === 3
+                    ? "bg-[rgba(205,127,50,0.06)] border-l-2 border-l-[#CD7F32]"
+                    : "";
+            const medalColor = row.rank === 1 ? "#FFD700" : row.rank === 2 ? "#C0C0C0" : row.rank === 3 ? "#CD7F32" : null;
+
+            return (
             <div
-              key={`${section.division}-${row.rank}`}
+              key={`${section.division}-${i}`}
               className={`grid grid-cols-[3rem_1fr_auto_5rem] md:grid-cols-[3rem_1fr_12rem_5rem] gap-x-4 px-5 py-2.5 border-b border-[var(--color-border)] last:border-b-0 transition-colors hover:bg-[var(--color-surface-2,rgba(255,255,255,0.02))] ${
-                i % 2 === 0 ? "" : "bg-[rgba(255,255,255,0.01)]"
+                medalBg || (i % 2 === 0 ? "" : "bg-[rgba(255,255,255,0.01)]")
               }`}
             >
               <span
                 className={`font-display text-lg leading-none text-center ${
                   row.rank === 1
-                    ? "text-[var(--color-volt)]"
-                    : row.rank <= 3
-                      ? "text-[var(--color-fg)]"
-                      : "text-[var(--color-fg-muted)]"
+                    ? "text-[#FFD700]"
+                    : row.rank === 2
+                      ? "text-[#C0C0C0]"
+                      : row.rank === 3
+                        ? "text-[#CD7F32]"
+                        : "text-[var(--color-fg-muted)]"
                 }`}
               >
-                {row.rank}
+                {medalColor ? <MedalIcon color={medalColor} rank={row.rank} /> : row.rank}
               </span>
               <span
                 className={`text-sm truncate ${
@@ -183,7 +197,8 @@ function FullResultsTable({ rows }: { rows: FullResultRow[] }) {
                 {row.time}
               </span>
             </div>
-          ))}
+            );
+          })}
         </div>
       ))}
     </div>
@@ -265,5 +280,17 @@ function EmptyResults({ stage }: { stage: Stage }) {
         </article>
       ))}
     </div>
+  );
+}
+
+function MedalIcon({ color, rank }: { color: string; rank: number }) {
+  return (
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-label={`${rank === 1 ? "Gold" : rank === 2 ? "Silver" : "Bronze"} medal`}>
+      <path d="M8 1L11 8L14 1" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.6" />
+      <circle cx="11" cy="13" r="7" fill={color} fillOpacity="0.15" stroke={color} strokeWidth="1.5" />
+      <text x="11" y="14" textAnchor="middle" dominantBaseline="central" fill={color} fontSize="8" fontWeight="bold" fontFamily="var(--font-display)">
+        {rank}
+      </text>
+    </svg>
   );
 }
