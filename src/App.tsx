@@ -9,22 +9,32 @@ import { ScrollProgress } from "@/components/ScrollProgress";
 import { MagneticButton } from "@/components/MagneticButton";
 import { Slogan } from "@/components/Slogan";
 import { Divisions } from "@/components/Divisions";
-import { Workout } from "@/components/Workout";
-import { Rulebook } from "@/components/Rulebook";
 import { Schedule } from "@/components/Schedule";
 import { Venue } from "@/components/Venue";
 import { WhatsAppIcon } from "@/components/icons";
 import { useSelectedStage } from "@/lib/useSelectedStage";
-import { site } from "@/lib/site";
+import { site, siteFromActiveStage } from "@/lib/site";
+import { useStageConfig } from "@/lib/useStageConfig";
 
 export default function App() {
   const [selectedStage, selectStage] = useSelectedStage();
+  const { stages: dynamicStages, activeStage } = useStageConfig();
+
+  // Resolve selected stage from dynamic data so StageDetail gets overrides
+  const resolvedSelected = selectedStage
+    ? dynamicStages.find((s) => s.number === selectedStage.number) ?? selectedStage
+    : null;
+
+  // Merge site defaults with active stage overrides (falls back to static site if no active stage)
+  const activeSite = activeStage
+    ? { ...site, ...siteFromActiveStage(activeStage) }
+    : site;
 
   return (
     <ErrorBoundary>
     <div className="flex min-h-screen flex-col bg-[var(--color-bg)] text-[var(--color-fg)]">
       <ScrollProgress />
-      <Header />
+      <Header stageLabel={activeSite.stage.label} stageTotal={activeSite.stage.total} />
       <main className="flex-1 pt-20">
         {/* HERO */}
         <section
@@ -36,7 +46,7 @@ export default function App() {
             className="pointer-events-none absolute left-[-1vw] top-[6vh] select-none font-display text-[28vw] leading-none text-transparent md:text-[20vw]"
             style={{ WebkitTextStroke: "1px rgba(136,197,71,0.10)" }}
           >
-            02
+            {String(activeSite.stage.number).padStart(2, "0")}
           </div>
 
           {/* Brand hero background — green X over wave texture */}
@@ -68,7 +78,7 @@ export default function App() {
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <p className="eyebrow">{site.positioning.eyebrow}</p>
               <p className="eyebrow">
-                {site.stage.label} / {String(site.stage.total).padStart(2, "0")}
+                {activeSite.stage.label} / {String(activeSite.stage.total).padStart(2, "0")}
               </p>
             </div>
 
@@ -86,64 +96,82 @@ export default function App() {
               <div className="flex-1 max-w-2xl">
                 <div className="flex items-end gap-5">
                   <span className="font-display text-7xl leading-none text-[var(--color-volt)] md:text-9xl">
-                    {site.event.day}
+                    {activeSite.event.day}
                   </span>
                   <div className="pb-2">
                     <p className="font-display text-3xl leading-none md:text-5xl">
-                      {site.event.monthShort}
+                      {activeSite.event.monthShort}
                     </p>
                     <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-fg-muted)] md:text-sm">
-                      {site.event.weekday} · {site.event.year}
+                      {activeSite.event.weekday} · {activeSite.event.year}
                     </p>
                   </div>
-                  <span
-                    aria-hidden
-                    className="ml-2 hidden h-12 w-px bg-[var(--color-border-strong)] md:block md:h-20"
-                  />
-                  <p className="hidden pb-2 font-mono text-sm uppercase tracking-widest text-[var(--color-fg-muted)] md:block">
-                    {site.event.timeWindow}
-                  </p>
+                  {activeSite.event.timeWindow && (
+                    <>
+                      <span
+                        aria-hidden
+                        className="ml-2 hidden h-12 w-px bg-[var(--color-border-strong)] md:block md:h-20"
+                      />
+                      <p className="hidden pb-2 font-mono text-sm uppercase tracking-widest text-[var(--color-fg-muted)] md:block">
+                        {activeSite.event.timeWindow}
+                      </p>
+                    </>
+                  )}
                 </div>
 
-                {/* Venue → maps link */}
-                <a
-                  href={site.event.mapsHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group mt-6 inline-flex items-baseline gap-3 link-uline"
-                >
-                  <span aria-hidden className="text-[var(--color-volt)]">📍</span>
-                  <span className="font-display text-2xl leading-tight md:text-3xl">
-                    {site.event.venue}
-                  </span>
-                  <span className="text-sm uppercase tracking-widest text-[var(--color-fg-muted)]">
-                    {site.event.city}
-                  </span>
-                  <span
-                    aria-hidden
-                    className="ml-1 text-sm text-[var(--color-volt)] transition-transform group-hover:translate-x-1"
-                  >
-                    ↗
-                  </span>
-                </a>
+                {/* Venue → maps link or city-only */}
+                {(() => {
+                  const ev = activeSite.event;
+                  const locationLabel = ev.venue || ev.city;
+                  if (!locationLabel) return null;
+                  const hasMap = !!ev.mapsHref;
+                  const inner = (
+                    <>
+                      <span aria-hidden className="text-[var(--color-volt)]">📍</span>
+                      <span className="font-display text-2xl leading-tight md:text-3xl">
+                        {locationLabel}
+                      </span>
+                      {ev.venue && ev.city && (
+                        <span className="text-sm uppercase tracking-widest text-[var(--color-fg-muted)]">
+                          {ev.city}
+                        </span>
+                      )}
+                      {!ev.venue && (
+                        <span className="font-mono text-xs uppercase tracking-widest text-[var(--color-fg-faint)]">
+                          Venue TBC
+                        </span>
+                      )}
+                    </>
+                  );
+                  return hasMap ? (
+                    <a href={ev.mapsHref} target="_blank" rel="noopener noreferrer" className="group mt-6 inline-flex items-baseline gap-3 link-uline">
+                      {inner}
+                      <span aria-hidden className="ml-1 text-sm text-[var(--color-volt)] transition-transform group-hover:translate-x-1">↗</span>
+                    </a>
+                  ) : (
+                    <div className="mt-6 inline-flex items-baseline gap-3">{inner}</div>
+                  );
+                })()}
 
-                <p className="mt-4 md:hidden font-mono text-xs uppercase tracking-widest text-[var(--color-fg-muted)]">
-                  {site.event.timeWindow}
-                </p>
+                {activeSite.event.timeWindow && (
+                  <p className="mt-4 md:hidden font-mono text-xs uppercase tracking-widest text-[var(--color-fg-muted)]">
+                    {activeSite.event.timeWindow}
+                  </p>
+                )}
               </div>
 
               {/* Right: countdown + CTAs */}
               <div className="flex flex-col gap-5 md:items-end">
-                <Countdown targetISO={site.event.dateISO} />
+                <Countdown targetISO={activeSite.event.dateISO} />
                 <div className="flex flex-col gap-3 md:flex-row">
                   <MagneticButton
-                    href={site.cta.primary.href}
+                    href={activeSite.cta.primary.href}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn-volt justify-center"
                     strength={0.3}
                   >
-                    {site.cta.primary.label}
+                    {activeSite.cta.primary.label}
                     <span aria-hidden>→</span>
                   </MagneticButton>
                   <a
@@ -174,7 +202,8 @@ export default function App() {
         </section>
 
         <SeasonGrid
-          selected={selectedStage?.number ?? null}
+          stages={dynamicStages}
+          selected={resolvedSelected?.number ?? null}
           onSelect={(n) => {
             selectStage(n);
             // Smooth-scroll to the detail block after state updates
@@ -185,19 +214,17 @@ export default function App() {
             });
           }}
         />
-        {selectedStage && (
+        {resolvedSelected && (
           <StageDetail
-            stage={selectedStage}
+            stage={resolvedSelected}
             onClose={() => selectStage(null)}
           />
         )}
         <CommunityStrip />
 
         <Divisions />
-        <Workout />
-        <Rulebook />
-        <Schedule />
-        <Venue />
+        <Schedule activeStage={activeStage} />
+        <Venue activeStage={activeStage} />
       </main>
       <Footer />
     </div>

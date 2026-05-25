@@ -5,7 +5,7 @@ import { useActiveSection } from "@/lib/useActiveSection";
 
 const NAV_IDS = site.nav.map((n) => n.href.replace("#", ""));
 
-export function Header() {
+export function Header({ stageLabel, stageTotal }: { stageLabel?: string; stageTotal?: number }) {
   const active = useActiveSection(NAV_IDS);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -40,7 +40,7 @@ export function Header() {
               className="h-6 w-auto md:h-8"
             />
             <span className="eyebrow hidden sm:inline-block border-l border-[var(--color-border-strong)] pl-3">
-              {site.stage.label} / {String(site.stage.total).padStart(2, "0")}
+              {stageLabel ?? site.stage.label} / {String(stageTotal ?? site.stage.total).padStart(2, "0")}
             </span>
           </a>
 

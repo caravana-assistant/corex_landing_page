@@ -1,14 +1,53 @@
-import { site } from "@/lib/site";
+import type { Stage } from "@/lib/stages";
 
 const checklist = [
   "Emirates ID or Passport",
   "Registration confirmation",
   "Training gear",
   "Water bottle (hydration stations available)",
-  "Arrive early \u2014 check-in at 4:00 PM is firm",
+  "Arrive early — check-in time is firm",
 ];
 
-export function Venue() {
+type Props = {
+  activeStage?: Stage | null;
+};
+
+export function Venue({ activeStage }: Props) {
+  const venue = activeStage?.venue;
+  const city = activeStage?.city;
+  const date = activeStage?.date;
+  const timeWindow = activeStage?.timeWindow;
+  const mapsHref = activeStage?.mapsHref;
+
+  if (!venue && !city) {
+    return (
+      <section id="venue" className="border-b border-[var(--color-border)]">
+        <div className="mx-auto max-w-[1440px] px-5 py-16 md:px-10 md:py-24">
+          <p className="eyebrow mb-4">Venue</p>
+          <h2 className="font-display text-4xl md:text-6xl uppercase tracking-tight mb-12">
+            Where It Happens
+          </h2>
+          <div className="flex min-h-[160px] flex-col items-center justify-center border border-[var(--color-border)] bg-[var(--color-surface)] py-10 text-center">
+            <p className="font-display text-2xl text-[var(--color-fg-muted)] md:text-3xl">
+              Venue to be confirmed.
+            </p>
+            <p className="mt-3 max-w-md font-mono text-xs uppercase tracking-widest text-[var(--color-fg-faint)]">
+              Location will be announced closer to the event
+            </p>
+            <a
+              href="https://chat.whatsapp.com/K2aHcGZjRNO6hN99ZVqhFD"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-volt mt-6 text-xs"
+            >
+              Join WhatsApp for updates
+            </a>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section
       id="venue"
@@ -21,41 +60,44 @@ export function Venue() {
         </h2>
 
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-16">
-          {/* Left: venue info */}
           <div>
             <h3 className="font-display text-3xl leading-tight md:text-4xl">
-              {site.event.venue}
+              {venue ?? city}
             </h3>
-            <p className="mt-3 font-mono text-sm uppercase tracking-widest text-[var(--color-fg-muted)]">
-              {site.event.city}
-            </p>
-            <p className="mt-1 font-mono text-sm text-[var(--color-fg-muted)]">
-              {site.event.date}
-            </p>
-            <p className="mt-1 font-mono text-sm text-[var(--color-fg-muted)]">
-              {site.event.timeWindow}
-            </p>
+            {venue && city && (
+              <p className="mt-3 font-mono text-sm uppercase tracking-widest text-[var(--color-fg-muted)]">
+                {city}
+              </p>
+            )}
+            {date && (
+              <p className="mt-1 font-mono text-sm text-[var(--color-fg-muted)]">
+                {date}
+              </p>
+            )}
+            {timeWindow && (
+              <p className="mt-1 font-mono text-sm text-[var(--color-fg-muted)]">
+                {timeWindow}
+              </p>
+            )}
 
-            <a
-              href={site.event.mapsHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-ghost mt-8 inline-flex gap-2"
-            >
-              <span aria-hidden className="text-[var(--color-volt)]">
-                &#x1F4CD;
-              </span>
-              Open in Maps
-              <span
-                aria-hidden
-                className="text-sm text-[var(--color-volt)]"
+            {mapsHref ? (
+              <a
+                href={mapsHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-ghost mt-8 inline-flex gap-2"
               >
-                &#x2197;
-              </span>
-            </a>
+                <span aria-hidden className="text-[var(--color-volt)]">📍</span>
+                Open in Maps
+                <span aria-hidden className="text-sm text-[var(--color-volt)]">↗</span>
+              </a>
+            ) : (
+              <p className="mt-8 font-mono text-xs uppercase tracking-widest text-[var(--color-fg-faint)]">
+                Maps link coming soon
+              </p>
+            )}
           </div>
 
-          {/* Right: checklist */}
           <div>
             <h3 className="font-display text-xl uppercase tracking-wide text-[var(--color-volt)] mb-6">
               What to Bring

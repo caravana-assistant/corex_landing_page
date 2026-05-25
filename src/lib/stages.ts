@@ -34,6 +34,7 @@ export type Stage = {
   recap?: { athletes: number; divisions: number; lanes?: number };
   photos: GalleryPhoto[];
   eventId?: string;
+  timeWindow?: string;
   results: DivisionResult[];
 };
 

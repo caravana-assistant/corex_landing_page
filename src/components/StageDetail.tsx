@@ -1,5 +1,7 @@
 import { PhotoGallery } from "@/components/PhotoGallery";
 import { Results } from "@/components/Results";
+import { Workout } from "@/components/Workout";
+import { Rulebook } from "@/components/Rulebook";
 import { WhatsAppIcon } from "@/components/icons";
 import type { Stage } from "@/lib/stages";
 import { site } from "@/lib/site";
@@ -104,8 +106,10 @@ export function StageDetail({ stage, onClose }: Props) {
           <PostponedBody />
         ) : (
           <div className="space-y-20 md:space-y-28">
-            <PhotoGallery stage={stage} />
+            {stage.photos.length > 0 && <PhotoGallery stage={stage} />}
             <Results stage={stage} />
+            <Workout confirmed={stage.status === "completed" || !!stage.timeWindow} />
+            <Rulebook confirmed={stage.status === "completed" || !!stage.timeWindow} />
           </div>
         )}
       </div>

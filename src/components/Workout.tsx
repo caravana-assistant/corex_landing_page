@@ -47,11 +47,40 @@ function StationIcon() {
   );
 }
 
-export function Workout() {
+export function Workout({ confirmed = true }: { confirmed?: boolean }) {
   const [showWeights, setShowWeights] = useState(false);
 
   /* Separate stations from runs for the grid layout */
   const stations = sequence.filter((s) => s.type === "station");
+
+  if (!confirmed) {
+    return (
+      <section id="workout" className="border-b border-[var(--color-border)]">
+        <div className="mx-auto max-w-[1440px] px-5 py-16 md:px-10 md:py-24">
+          <p className="eyebrow mb-4">Race Format</p>
+          <h2 className="font-display text-5xl md:text-7xl uppercase tracking-tight mb-4">
+            The Challenge
+          </h2>
+          <div className="flex min-h-[160px] flex-col items-center justify-center border border-[var(--color-border)] bg-[var(--color-surface)] py-10 text-center">
+            <p className="font-display text-2xl text-[var(--color-fg-muted)] md:text-3xl">
+              Workout to be confirmed.
+            </p>
+            <p className="mt-3 max-w-md font-mono text-xs uppercase tracking-widest text-[var(--color-fg-faint)]">
+              Details will be announced closer to the event
+            </p>
+            <a
+              href="https://chat.whatsapp.com/K2aHcGZjRNO6hN99ZVqhFD"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-volt mt-6 text-xs"
+            >
+              Join WhatsApp for updates
+            </a>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
