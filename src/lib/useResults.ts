@@ -115,11 +115,17 @@ export function useResults(eventId: string | undefined): {
 
       for (const div of sortedDivs) {
         const entries = byDiv.get(div)!;
-        const podium: PodiumRow[] = entries.slice(0, 3).map((r, i) => ({
-          rank: (i + 1) as 1 | 2 | 3,
-          name: r.full_name ?? `${r.first_name} ${r.last_name}`.trim(),
-          time: formatTime(r.result_time_seconds),
-        }));
+        let podiumRank = 1;
+        const podium: PodiumRow[] = entries.slice(0, 3).map((r, i) => {
+          if (i > 0 && r.result_time_seconds !== entries[i - 1].result_time_seconds) {
+            podiumRank = i + 1;
+          }
+          return {
+            rank: podiumRank as 1 | 2 | 3,
+            name: r.full_name ?? `${r.first_name} ${r.last_name}`.trim(),
+            time: formatTime(r.result_time_seconds),
+          };
+        });
 
         divResults.push({
           division: DIVISION_LABELS[div] ?? div,
@@ -128,12 +134,17 @@ export function useResults(eventId: string | undefined): {
       }
 
       // Build full results table (all finishers, ranked per division)
+      // Tied times share the same rank (dense ranking)
       const full: FullResultRow[] = [];
       for (const div of sortedDivs) {
         const entries = byDiv.get(div)!;
+        let currentRank = 1;
         entries.forEach((r, i) => {
+          if (i > 0 && r.result_time_seconds !== entries[i - 1].result_time_seconds) {
+            currentRank = i + 1;
+          }
           full.push({
-            rank: i + 1,
+            rank: currentRank,
             name: r.full_name ?? `${r.first_name} ${r.last_name}`.trim(),
             division: DIVISION_LABELS[div] ?? div,
             time: formatTime(r.result_time_seconds),
