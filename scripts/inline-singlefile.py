@@ -28,7 +28,7 @@ PUBLIC = ROOT / "public"
 # CSS url() / src() calls, and JS template literals (backticks).
 # Keeps the surrounding character so we can re-insert it cleanly.
 PATTERN = re.compile(
-    r"""(["'`\(])(?:\./)?(/?(?:brand|favicon)[^"'`\)\s]+)""",
+    r"""(["'`\(])(?:\./)?/?(?:landingnodejs/)?(/?(?:brand|favicon)[^"'`\)\s]+)""",
     re.VERBOSE,
 )
 

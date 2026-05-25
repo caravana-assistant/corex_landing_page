@@ -23,7 +23,7 @@ export function StageDetail({ stage, onClose }: Props) {
             aria-hidden
             className="pointer-events-none absolute inset-0 opacity-30"
             style={{
-              backgroundImage: "url(/brand/hero-bg.jpg)",
+              backgroundImage: "url(/landingnodejs/brand/hero-bg.jpg)",
               backgroundSize: "cover",
               backgroundPosition: "right center",
               maskImage:

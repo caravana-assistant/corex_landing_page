@@ -17,7 +17,7 @@ try { gitHash = execSync("git rev-parse --short HEAD").toString().trim(); } catc
 export default defineConfig({
   // Relative base so the multi-file build also works when opened via
   // file:// (no web server) and when dropped into any subpath on a host.
-  base: "./",
+  base: "/landingnodejs/",
   plugins: [
     react(),
     tailwindcss(),

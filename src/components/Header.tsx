@@ -35,7 +35,7 @@ export function Header() {
             className="flex items-center gap-3"
           >
             <img
-              src="/brand/logo.png"
+              src="/landingnodejs/brand/logo.png"
               alt="CoreX"
               className="h-6 w-auto md:h-8"
             />

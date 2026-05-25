@@ -44,7 +44,7 @@ export default function App() {
             aria-hidden
             className="pointer-events-none absolute inset-0 opacity-40"
             style={{
-              backgroundImage: "url(/brand/hero-bg.jpg)",
+              backgroundImage: "url(/landingnodejs/brand/hero-bg.jpg)",
               backgroundSize: "cover",
               backgroundPosition: "right center",
               maskImage:

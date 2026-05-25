@@ -20,7 +20,7 @@ export function Footer() {
       <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-10 px-5 py-16 md:grid-cols-12 md:gap-8 md:px-10 md:py-20">
         <div className="md:col-span-5">
           <img
-            src="/brand/logo.png"
+            src="/landingnodejs/brand/logo.png"
             alt="CoreX"
             className="h-10 w-auto md:h-12"
           />
