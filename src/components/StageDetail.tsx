@@ -1,5 +1,7 @@
 import { PhotoGallery } from "@/components/PhotoGallery";
 import { Results } from "@/components/Results";
+import { Workout } from "@/components/Workout";
+import { Rulebook } from "@/components/Rulebook";
 import { WhatsAppIcon } from "@/components/icons";
 import type { Stage } from "@/lib/stages";
 import { site } from "@/lib/site";
@@ -104,8 +106,10 @@ export function StageDetail({ stage, onClose }: Props) {
           <PostponedBody />
         ) : (
           <div className="space-y-20 md:space-y-28">
-            <PhotoGallery stage={stage} />
+            {stage.photos.length > 0 && <PhotoGallery stage={stage} />}
             <Results stage={stage} />
+            <Workout confirmed={stage.status === "completed" || !!stage.timeWindow} />
+            <Rulebook confirmed={stage.status === "completed" || !!stage.timeWindow} />
           </div>
         )}
       </div>
@@ -132,8 +136,8 @@ function StatusBadge({ stage }: { stage: Stage }) {
   }
   if (stage.status === "completed") {
     return (
-      <span className="inline-flex items-center gap-2 self-start rounded-full border border-[var(--color-fg-muted)] px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-[var(--color-fg-muted)]">
-        Completed
+      <span className="inline-flex items-center gap-2 self-start rounded-full border border-[var(--color-volt)] bg-[var(--color-volt)]/10 px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-[var(--color-volt)]">
+        Completed · View Results ↓
       </span>
     );
   }

@@ -1,12 +1,13 @@
 import { useRef } from "react";
-import { stages, type Stage, type StageStatus } from "@/lib/stages";
+import { stages as staticStages, type Stage, type StageStatus } from "@/lib/stages";
 
 type Props = {
   selected: number | null;
   onSelect: (n: number) => void;
+  stages?: Stage[];
 };
 
-export function SeasonGrid({ selected, onSelect }: Props) {
+export function SeasonGrid({ selected, onSelect, stages = staticStages }: Props) {
   return (
     <section
       id="season"
@@ -241,13 +242,13 @@ function toneFor(status: StageStatus): {
     default:
       return {
         cardClass:
-          "border-[var(--color-border)] bg-[var(--color-surface)] opacity-50 hover:opacity-70",
-        statusLabel: "TBC",
+          "border-red-900/40 bg-red-950/20 opacity-70 hover:opacity-90 hover:border-red-700/50",
+        statusLabel: "Cooking 🔥",
         statusClass:
-          "border-[var(--color-fg-faint)] text-[var(--color-fg-faint)]",
-        numberClass: "text-[var(--color-fg-faint)]",
-        dateClass: "text-[var(--color-fg-faint)]",
-        venueClass: "text-[var(--color-fg-faint)]",
+          "border-red-800/60 text-red-400 animate-pulse",
+        numberClass: "text-red-900/50",
+        dateClass: "text-red-400/60",
+        venueClass: "text-red-400/40",
       };
   }
 }

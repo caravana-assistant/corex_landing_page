@@ -73,3 +73,57 @@ export const site = {
     links: [],
   },
 } as const;
+
+// ---------------------------------------------------------------------------
+// Helper: derive site-compatible overrides from a dynamic Stage
+// ---------------------------------------------------------------------------
+import type { Stage } from './stages';
+
+export function siteFromActiveStage(stage: Stage) {
+  // Parse full event date to extract weekday, year, ISO, etc.
+  const eventOverrides: Record<string, string> = {};
+  if (stage.date) {
+    try {
+      const parsed = new Date(stage.date);
+      if (!isNaN(parsed.getTime())) {
+        eventOverrides.weekday = parsed.toLocaleDateString('en-US', { weekday: 'long' });
+        eventOverrides.year = String(parsed.getFullYear());
+        eventOverrides.yearShort = String(parsed.getFullYear()).slice(-2);
+        eventOverrides.month = parsed.toLocaleDateString('en-US', { month: 'long' });
+        eventOverrides.monthNum = String(parsed.getMonth() + 1).padStart(2, '0');
+        eventOverrides.day = String(parsed.getDate()).padStart(2, '0');
+        eventOverrides.dateISO = parsed.toISOString();
+      }
+    } catch { /* keep defaults */ }
+  }
+
+  return {
+    event: {
+      ...site.event,
+      ...(stage.date ? { date: stage.date } : {}),
+      ...eventOverrides,
+      ...(stage.dateShort
+        ? {
+            monthShort: stage.dateShort.split(' ')[1] ?? site.event.monthShort,
+            day: stage.dateShort.split(' ')[0] ?? site.event.day,
+          }
+        : {}),
+      ...(stage.venue ? { venue: stage.venue } : {}),
+      ...(stage.city ? { city: stage.city } : {}),
+      ...(stage.mapsHref ? { mapsHref: stage.mapsHref } : {}),
+      timeWindow: stage.timeWindow ?? '',
+    },
+    stage: {
+      number: stage.number,
+      total: 8,
+      label: stage.label,
+    },
+    cta: {
+      primary: {
+        ...site.cta.primary,
+        ...(stage.registerHref ? { href: stage.registerHref } : {}),
+      },
+      secondary: site.cta.secondary,
+    },
+  };
+}

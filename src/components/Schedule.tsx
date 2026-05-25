@@ -1,6 +1,6 @@
-import { site } from "@/lib/site";
+import type { Stage } from "@/lib/stages";
 
-const timeline = [
+const defaultTimeline = [
   { time: "4:00 PM", activity: "Registration & Check-in" },
   { time: "4:30 PM", activity: "Event Briefing" },
   { time: "5:00 PM", activity: "Competition Starts" },
@@ -8,7 +8,14 @@ const timeline = [
   { time: "10:00 PM", activity: "Event Close" },
 ] as const;
 
-export function Schedule() {
+type Props = {
+  activeStage?: Stage | null;
+};
+
+export function Schedule({ activeStage }: Props) {
+  const hasSchedule = !!activeStage?.timeWindow;
+  const dateLabel = activeStage?.date ?? "Date to be confirmed";
+
   return (
     <section
       id="schedule"
@@ -20,56 +27,67 @@ export function Schedule() {
           Event Day
         </h2>
         <p className="text-base text-[var(--color-fg-muted)] md:text-lg mb-12">
-          {site.event.date}
+          {dateLabel}
         </p>
 
-        {/* Timeline */}
-        <div className="relative max-w-xl">
-          {/* Vertical connector */}
-          <div
-            aria-hidden
-            className="absolute left-[59px] top-4 bottom-4 w-px bg-[var(--color-border)] md:left-[79px]"
-          />
-
-          <div className="space-y-0">
-            {timeline.map((entry, i) => (
-              <div key={i} className="relative flex items-start gap-5 py-4">
-                {/* Time */}
-                <span className="w-[44px] shrink-0 text-right font-mono text-sm text-[var(--color-volt)] md:w-[64px] md:text-base">
-                  {entry.time}
-                </span>
-
-                {/* Dot */}
-                <div className="relative z-10 mt-1.5 flex h-3 w-3 shrink-0 items-center justify-center">
-                  <span
-                    className={`block rounded-full ${
-                      entry.time
-                        ? "h-3 w-3 bg-[var(--color-volt)]"
-                        : "h-2 w-2 bg-[var(--color-border-strong)]"
-                    }`}
-                  />
-                </div>
-
-                {/* Activity */}
-                <span
-                  className={`font-display text-lg uppercase tracking-wide md:text-xl ${
-                    entry.time
-                      ? "text-[var(--color-fg)]"
-                      : "text-[var(--color-fg-muted)] text-base md:text-lg"
-                  }`}
-                >
-                  {entry.activity}
-                </span>
+        {hasSchedule ? (
+          <>
+            <div className="relative max-w-xl">
+              <div
+                aria-hidden
+                className="absolute left-[59px] top-4 bottom-4 w-px bg-[var(--color-border)] md:left-[79px]"
+              />
+              <div className="space-y-0">
+                {defaultTimeline.map((entry, i) => (
+                  <div key={i} className="relative flex items-start gap-5 py-4">
+                    <span className="w-[44px] shrink-0 text-right font-mono text-sm text-[var(--color-volt)] md:w-[64px] md:text-base">
+                      {entry.time}
+                    </span>
+                    <div className="relative z-10 mt-1.5 flex h-3 w-3 shrink-0 items-center justify-center">
+                      <span
+                        className={`block rounded-full ${
+                          entry.time
+                            ? "h-3 w-3 bg-[var(--color-volt)]"
+                            : "h-2 w-2 bg-[var(--color-border-strong)]"
+                        }`}
+                      />
+                    </div>
+                    <span
+                      className={`font-display text-lg uppercase tracking-wide md:text-xl ${
+                        entry.time
+                          ? "text-[var(--color-fg)]"
+                          : "text-[var(--color-fg-muted)] text-base md:text-lg"
+                      }`}
+                    >
+                      {entry.activity}
+                    </span>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+            <p className="mt-10 max-w-xl text-sm text-[var(--color-fg-muted)] md:text-base">
+              Awards after each division, not at end of day. Spectators welcome
+              throughout.
+            </p>
+          </>
+        ) : (
+          <div className="flex min-h-[160px] flex-col items-center justify-center border border-[var(--color-border)] bg-[var(--color-surface)] py-10 text-center">
+            <p className="font-display text-2xl text-[var(--color-fg-muted)] md:text-3xl">
+              Schedule to be confirmed.
+            </p>
+            <p className="mt-3 max-w-md font-mono text-xs uppercase tracking-widest text-[var(--color-fg-faint)]">
+              Times will be announced closer to the event
+            </p>
+            <a
+              href="https://chat.whatsapp.com/K2aHcGZjRNO6hN99ZVqhFD"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-volt mt-6 text-xs"
+            >
+              Join WhatsApp for updates
+            </a>
           </div>
-        </div>
-
-        {/* Note */}
-        <p className="mt-10 max-w-xl text-sm text-[var(--color-fg-muted)] md:text-base">
-          Awards after each division, not at end of day. Spectators welcome
-          throughout.
-        </p>
+        )}
       </div>
     </section>
   );

@@ -13,7 +13,36 @@ const covers = [
   { label: "Safety & Conduct", note: "Athlete responsibilities, judge authority" },
 ] as const;
 
-export function Rulebook() {
+export function Rulebook({ confirmed = true }: { confirmed?: boolean }) {
+  if (!confirmed) {
+    return (
+      <section id="rulebook" className="border-b border-[var(--color-border)]">
+        <div className="mx-auto max-w-[1440px] px-5 py-16 md:px-10 md:py-24">
+          <p className="eyebrow mb-4">Official Document</p>
+          <h2 className="font-display text-4xl md:text-6xl uppercase tracking-tight mb-4">
+            Rulebook
+          </h2>
+          <div className="flex min-h-[160px] flex-col items-center justify-center border border-[var(--color-border)] bg-[var(--color-surface)] py-10 text-center">
+            <p className="font-display text-2xl text-[var(--color-fg-muted)] md:text-3xl">
+              Rulebook to be confirmed.
+            </p>
+            <p className="mt-3 max-w-md font-mono text-xs uppercase tracking-widest text-[var(--color-fg-faint)]">
+              Rules and standards will be published before the event
+            </p>
+            <a
+              href="https://chat.whatsapp.com/K2aHcGZjRNO6hN99ZVqhFD"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-volt mt-6 text-xs"
+            >
+              Join WhatsApp for updates
+            </a>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section
       id="rulebook"

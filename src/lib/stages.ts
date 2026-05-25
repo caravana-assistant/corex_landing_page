@@ -34,6 +34,7 @@ export type Stage = {
   recap?: { athletes: number; divisions: number; lanes?: number };
   photos: GalleryPhoto[];
   eventId?: string;
+  timeWindow?: string;
   results: DivisionResult[];
 };
 
@@ -55,14 +56,12 @@ export const stages: Stage[] = [
     number: 2,
     numberPadded: "02",
     label: "STAGE 02",
-    status: "current",
+    status: "completed",
     date: "May 23, 2026",
     dateShort: "23 MAY",
     venue: "Hazza Bin Zayed Stadium",
     city: "Al Ain",
     mapsHref: "https://maps.app.goo.gl/Vziib3gBaDeKczSo8",
-    registerHref:
-      "https://in.abudhabimarathon.events/corex--stage-2?currentPage=select-competition",
     eventId: "1c9d5b45-489a-4126-94ec-ce96fd7431ed",
     photos: [],
     results: [],
@@ -71,11 +70,11 @@ export const stages: Stage[] = [
     number: 3,
     numberPadded: "03",
     label: "STAGE 03",
-    status: "loading",
-    date: "Jun 06, 2026",
-    dateShort: "06 JUN",
-    venue: undefined, // venue still being confirmed
+    status: "current",
+    date: "Jun 03, 2026",
+    dateShort: "03 JUN",
     city: "Al Dhannah",
+    registerHref: "https://in.abudhabimarathon.events/core-x-stage-3-al-dhanna",
     photos: [],
     results: [],
   },
