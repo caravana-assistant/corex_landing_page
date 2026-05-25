@@ -11,7 +11,8 @@ import { execSync } from "child_process";
 const SINGLE = process.env.BUILD_SINGLE === "1";
 
 const pkg = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
-const gitHash = execSync("git rev-parse --short HEAD").toString().trim();
+let gitHash = "unknown";
+try { gitHash = execSync("git rev-parse --short HEAD").toString().trim(); } catch { /* not a git repo (e.g. Vercel build) */ }
 
 export default defineConfig({
   // Relative base so the multi-file build also works when opened via
