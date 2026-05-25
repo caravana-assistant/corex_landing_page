@@ -8,7 +8,7 @@ export function Footer() {
         <div className="marquee-track font-display text-5xl text-[var(--color-fg)] md:text-7xl lg:text-8xl">
           {Array.from({ length: 6 }).map((_, i) => (
             <span key={i} className="flex items-center gap-12 whitespace-nowrap">
-              <span>CHARGE UP</span>
+              <span className="text-[var(--color-volt)]">CHARGE UP</span>
               <span aria-hidden className="text-[var(--color-volt)]">◆</span>
               <span>BREAK YOUR LIMIT</span>
               <span aria-hidden className="text-[var(--color-volt)]">◆</span>
