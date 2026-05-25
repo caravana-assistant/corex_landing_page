@@ -183,6 +183,7 @@ export function Workout() {
           <button
             type="button"
             onClick={() => setShowWeights((v) => !v)}
+            aria-expanded={showWeights}
             className="flex w-full items-center justify-between px-6 py-5 text-left transition-colors hover:bg-[color-mix(in_srgb,var(--color-volt)_6%,transparent)]"
           >
             <div className="flex items-center gap-3">

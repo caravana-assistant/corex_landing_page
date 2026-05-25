@@ -1,3 +1,4 @@
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Countdown } from "@/components/Countdown";
@@ -20,6 +21,7 @@ export default function App() {
   const [selectedStage, selectStage] = useSelectedStage();
 
   return (
+    <ErrorBoundary>
     <div className="flex min-h-screen flex-col bg-[var(--color-bg)] text-[var(--color-fg)]">
       <ScrollProgress />
       <Header />
@@ -199,5 +201,6 @@ export default function App() {
       </main>
       <Footer />
     </div>
+    </ErrorBoundary>
   );
 }

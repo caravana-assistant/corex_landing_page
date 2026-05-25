@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Stage } from "@/lib/stages";
 
 type Props = { stage: Stage };
@@ -62,20 +62,93 @@ export function PhotoGallery({ stage }: Props) {
 
       {/* Lightbox */}
       {open !== null && photos[open] && (
+        <Lightbox
+          photos={photos}
+          index={open}
+          onClose={() => setOpen(null)}
+          onChange={setOpen}
+        />
+      )}
+    </div>
+  );
+}
+
+function Lightbox({
+  photos,
+  index,
+  onClose,
+  onChange,
+}: {
+  photos: { src: string; alt: string; caption?: string }[];
+  index: number;
+  onClose: () => void;
+  onChange: (i: number) => void;
+}) {
+  useEffect(() => {
+    const prev = document.activeElement as HTMLElement | null;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowRight" && index < photos.length - 1) onChange(index + 1);
+      if (e.key === "ArrowLeft" && index > 0) onChange(index - 1);
+    };
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+      prev?.focus();
+    };
+  }, [index, photos.length, onClose, onChange]);
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Photo ${index + 1} of ${photos.length}`}
+      className="fixed inset-0 z-[80] flex items-center justify-center bg-black/95 p-4 backdrop-blur-md"
+    >
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label="Close photo"
+        className="absolute inset-0 w-full h-full cursor-default"
+      />
+      <img
+        src={photos[index].src}
+        alt={photos[index].alt}
+        className="relative z-10 max-h-[92vh] max-w-[92vw] object-contain"
+      />
+      <div className="absolute right-5 top-5 z-10 flex items-center gap-4">
+        <span className="font-mono text-xs uppercase tracking-widest text-[var(--color-fg-muted)]">
+          {index + 1} / {photos.length}
+        </span>
         <button
           type="button"
-          onClick={() => setOpen(null)}
-          aria-label="Close photo"
-          className="fixed inset-0 z-[80] flex items-center justify-center bg-black/95 p-4 backdrop-blur-md"
+          onClick={onClose}
+          aria-label="Close"
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--color-border-strong)] text-[var(--color-fg-muted)] transition-colors hover:text-[var(--color-fg)]"
         >
-          <img
-            src={photos[open].src}
-            alt={photos[open].alt}
-            className="max-h-[92vh] max-w-[92vw] object-contain"
-          />
-          <span className="absolute right-5 top-5 font-mono text-xs uppercase tracking-widest text-[var(--color-fg-muted)]">
-            Close · {open + 1} / {photos.length}
-          </span>
+          ×
+        </button>
+      </div>
+      {index > 0 && (
+        <button
+          type="button"
+          onClick={() => onChange(index - 1)}
+          aria-label="Previous photo"
+          className="absolute left-4 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-border-strong)] text-[var(--color-fg-muted)] transition-colors hover:text-[var(--color-fg)]"
+        >
+          ‹
+        </button>
+      )}
+      {index < photos.length - 1 && (
+        <button
+          type="button"
+          onClick={() => onChange(index + 1)}
+          aria-label="Next photo"
+          className="absolute right-4 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-border-strong)] text-[var(--color-fg-muted)] transition-colors hover:text-[var(--color-fg)]"
+        >
+          ›
         </button>
       )}
     </div>

@@ -83,6 +83,7 @@ export function StageDetail({ stage, onClose }: Props) {
               <button
                 type="button"
                 onClick={onClose}
+                aria-label="Close stage detail"
                 className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-[var(--color-fg-muted)] transition-colors hover:text-[var(--color-fg)]"
               >
                 <span aria-hidden>×</span> Close
