@@ -137,6 +137,9 @@ export function Footer() {
       <div className="border-t border-[var(--color-border)]">
         <div className="mx-auto flex max-w-[1440px] flex-col gap-4 px-5 py-6 text-xs text-[var(--color-fg-muted)] md:flex-row md:items-center md:justify-between md:px-10">
           <p>{site.legal.copyright}</p>
+          <span className="font-mono text-[10px] tracking-widest text-[var(--color-fg-faint)]">
+            v{__APP_VERSION__}·{__GIT_HASH__}
+          </span>
         </div>
       </div>
     </footer>

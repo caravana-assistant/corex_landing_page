@@ -3,10 +3,15 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { viteSingleFile } from "vite-plugin-singlefile";
 import path from "node:path";
+import fs from "fs";
+import { execSync } from "child_process";
 
 // Set BUILD_SINGLE=1 to inline EVERYTHING (css/js/images) into one index.html.
 // Default build keeps separate hashed assets for cache-friendly deploys.
 const SINGLE = process.env.BUILD_SINGLE === "1";
+
+const pkg = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
+const gitHash = execSync("git rev-parse --short HEAD").toString().trim();
 
 export default defineConfig({
   // Relative base so the multi-file build also works when opened via
@@ -27,6 +32,10 @@ export default defineConfig({
         rollupOptions: { output: { inlineDynamicImports: true } },
       }
     : undefined,
+  define: {
+    __APP_VERSION__: JSON.stringify(pkg.version),
+    __GIT_HASH__: JSON.stringify(gitHash),
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
