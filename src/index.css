@@ -11,7 +11,7 @@
   /* Foreground */
   --color-fg: #f5f5f0;
   --color-fg-muted: #8c8c8c;
-  --color-fg-faint: #555555;
+  --color-fg-faint: #767676;
 
   /* Accents — CoreX brand: lightning-bolt lime green on black */
   --color-volt: #88c547;
@@ -89,7 +89,7 @@ body {
 
 .eyebrow {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--color-fg-muted);
@@ -200,7 +200,6 @@ body {
     translate3d(var(--shift-x, 0px), var(--shift-y, 0px), 0);
   transform-style: preserve-3d;
   transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.1, 1);
-  will-change: transform;
 }
 
 @keyframes letter-up {
@@ -268,7 +267,6 @@ body {
     border-color 0.3s ease,
     background-color 0.3s ease,
     box-shadow 0.3s ease;
-  will-change: transform;
 }
 .stage-card:hover {
   transform: translateY(-4px) rotateX(var(--rx)) rotateY(var(--ry));

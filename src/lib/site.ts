@@ -70,11 +70,6 @@ export const site = {
   },
   legal: {
     copyright: "© 2026 CoreX Fitness League. All rights reserved.",
-    links: [
-      { label: "Privacy Policy", href: "#privacy" },
-      { label: "Terms", href: "#terms" },
-      { label: "Code of Conduct", href: "#code" },
-      { label: "Athlete Waiver", href: "#waiver" },
-    ],
+    links: [],
   },
 } as const;

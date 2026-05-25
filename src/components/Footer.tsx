@@ -4,7 +4,7 @@ import { InstagramIcon, WhatsAppIcon } from "@/components/icons";
 export function Footer() {
   return (
     <footer className="relative border-t border-[var(--color-border)] bg-[var(--color-bg)]">
-      <div className="overflow-hidden border-b border-[var(--color-border)] py-6 md:py-10">
+      <div className="overflow-hidden border-b border-[var(--color-border)] py-6 md:py-10" aria-hidden="true">
         <div className="marquee-track font-display text-5xl text-[var(--color-fg)] md:text-7xl lg:text-8xl">
           {Array.from({ length: 6 }).map((_, i) => (
             <span key={i} className="flex items-center gap-12 whitespace-nowrap">
@@ -137,15 +137,9 @@ export function Footer() {
       <div className="border-t border-[var(--color-border)]">
         <div className="mx-auto flex max-w-[1440px] flex-col gap-4 px-5 py-6 text-xs text-[var(--color-fg-muted)] md:flex-row md:items-center md:justify-between md:px-10">
           <p>{site.legal.copyright}</p>
-          <ul className="flex flex-wrap gap-x-6 gap-y-2">
-            {site.legal.links.map((l) => (
-              <li key={l.href}>
-                <a href={l.href} className="link-uline hover:text-[var(--color-fg)]">
-                  {l.label}
-                </a>
-              </li>
-            ))}
-          </ul>
+          <span className="font-mono text-[10px] tracking-widest text-[var(--color-fg-faint)]">
+            v{__APP_VERSION__}·{__GIT_HASH__}
+          </span>
         </div>
       </div>
     </footer>

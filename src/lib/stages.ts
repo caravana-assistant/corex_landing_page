@@ -33,6 +33,7 @@ export type Stage = {
   registerHref?: string;
   recap?: { athletes: number; divisions: number; lanes?: number };
   photos: GalleryPhoto[];
+  eventId?: string;
   results: DivisionResult[];
 };
 
@@ -62,6 +63,7 @@ export const stages: Stage[] = [
     mapsHref: "https://maps.app.goo.gl/Vziib3gBaDeKczSo8",
     registerHref:
       "https://in.abudhabimarathon.events/corex--stage-2?currentPage=select-competition",
+    eventId: "1c9d5b45-489a-4126-94ec-ce96fd7431ed",
     photos: [],
     results: [],
   },

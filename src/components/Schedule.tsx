@@ -1,3 +1,5 @@
+import { site } from "@/lib/site";
+
 const timeline = [
   { time: "4:00 PM", activity: "Registration & Check-in" },
   { time: "4:30 PM", activity: "Event Briefing" },
@@ -18,7 +20,7 @@ export function Schedule() {
           Event Day
         </h2>
         <p className="text-base text-[var(--color-fg-muted)] md:text-lg mb-12">
-          Saturday, 23 May 2026
+          {site.event.date}
         </p>
 
         {/* Timeline */}
