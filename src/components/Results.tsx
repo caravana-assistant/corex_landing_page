@@ -1,16 +1,21 @@
-import type { Stage } from "@/lib/stages";
+import type { DivisionResult, Stage } from "@/lib/stages";
+import { useResults } from "@/lib/useResults";
 
 type Props = { stage: Stage };
 
 export function Results({ stage }: Props) {
-  const results = stage.results;
+  const { results: liveResults, loading: liveLoading, published } = useResults(stage.eventId);
+  const results = published ? liveResults : stage.results;
+  const isLoading = stage.eventId ? liveLoading : false;
 
   const hasResults = results.length > 0;
-  const headline = !hasResults
-    ? "Coming soon."
-    : stage.status === "completed"
-      ? "Who took the crown."
-      : "Live results.";
+  const headline = isLoading
+    ? "Loading results..."
+    : !hasResults
+      ? "Coming soon."
+      : stage.status === "completed"
+        ? "Who took the crown."
+        : "Live results.";
 
   return (
     <div>
@@ -26,15 +31,21 @@ export function Results({ stage }: Props) {
         </p>
       </header>
 
-      {results.length === 0 ? <EmptyResults stage={stage} /> : <ResultsGrid stage={stage} />}
+      {isLoading ? (
+        <LoadingShimmer />
+      ) : results.length === 0 ? (
+        <EmptyResults stage={stage} />
+      ) : (
+        <ResultsGrid results={results} />
+      )}
     </div>
   );
 }
 
-function ResultsGrid({ stage }: { stage: Stage }) {
+function ResultsGrid({ results }: { results: DivisionResult[] }) {
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
-      {stage.results.map((row) => (
+      {results.map((row) => (
         <article
           key={row.division}
           className="group relative border border-[var(--color-border)] bg-[var(--color-surface)] p-6 transition-colors hover:border-[var(--color-volt)]"
@@ -70,6 +81,41 @@ function ResultsGrid({ stage }: { stage: Stage }) {
   );
 }
 
+function LoadingShimmer() {
+  return (
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <article
+          key={i}
+          aria-hidden
+          className="border border-[var(--color-border)] bg-[var(--color-surface)] p-6"
+        >
+          <div className="loading-shimmer mb-4 h-3 w-24 rounded" />
+          <div className="space-y-3">
+            {[1, 2, 3].map((rank) => (
+              <div
+                key={rank}
+                className="flex items-baseline gap-3 border-b border-[var(--color-border)] pb-2 last:border-b-0"
+              >
+                <span
+                  className={`font-display text-2xl leading-none ${
+                    rank === 1
+                      ? "text-[var(--color-volt)]"
+                      : "text-[var(--color-fg-faint)]"
+                  }`}
+                >
+                  {rank}
+                </span>
+                <div className="loading-shimmer h-3 flex-1 rounded" />
+              </div>
+            ))}
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}
+
 function EmptyResults({ stage }: { stage: Stage }) {
   if (stage.status === "tbc") {
     return (
@@ -82,38 +128,7 @@ function EmptyResults({ stage }: { stage: Stage }) {
   }
 
   if (stage.status === "loading") {
-    return (
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <article
-            key={i}
-            aria-hidden
-            className="border border-[var(--color-border)] bg-[var(--color-surface)] p-6"
-          >
-            <div className="loading-shimmer mb-4 h-3 w-24 rounded" />
-            <div className="space-y-3">
-              {[1, 2, 3].map((rank) => (
-                <div
-                  key={rank}
-                  className="flex items-baseline gap-3 border-b border-[var(--color-border)] pb-2 last:border-b-0"
-                >
-                  <span
-                    className={`font-display text-2xl leading-none ${
-                      rank === 1
-                        ? "text-[var(--color-volt)]"
-                        : "text-[var(--color-fg-faint)]"
-                    }`}
-                  >
-                    {rank}
-                  </span>
-                  <div className="loading-shimmer h-3 flex-1 rounded" />
-                </div>
-              ))}
-            </div>
-          </article>
-        ))}
-      </div>
-    );
+    return <LoadingShimmer />;
   }
 
   // Completed or current — placeholder cards with TBA
