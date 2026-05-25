@@ -132,8 +132,8 @@ function StatusBadge({ stage }: { stage: Stage }) {
   }
   if (stage.status === "completed") {
     return (
-      <span className="inline-flex items-center gap-2 self-start rounded-full border border-[var(--color-fg-muted)] px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-[var(--color-fg-muted)]">
-        Completed
+      <span className="inline-flex items-center gap-2 self-start rounded-full border border-[var(--color-volt)] bg-[var(--color-volt)]/10 px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-[var(--color-volt)]">
+        Completed · View Results ↓
       </span>
     );
   }
