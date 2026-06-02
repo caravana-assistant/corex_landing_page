@@ -35,6 +35,9 @@ export type Stage = {
   photos: GalleryPhoto[];
   eventId?: string;
   timeWindow?: string;
+  // Workout appears once timeWindow is set; the Rulebook is gated separately
+  // (set true only when this stage's rulebook content is actually ready).
+  rulebookReady?: boolean;
   results: DivisionResult[];
 };
 

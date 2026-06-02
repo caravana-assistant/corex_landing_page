@@ -109,7 +109,7 @@ export function StageDetail({ stage, onClose }: Props) {
             {stage.photos.length > 0 && <PhotoGallery stage={stage} />}
             <Results stage={stage} />
             <Workout confirmed={stage.status === "completed" || !!stage.timeWindow} />
-            <Rulebook confirmed={stage.status === "completed" || !!stage.timeWindow} />
+            <Rulebook confirmed={stage.status === "completed" || !!stage.rulebookReady} />
           </div>
         )}
       </div>
