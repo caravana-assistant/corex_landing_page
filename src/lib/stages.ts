@@ -81,7 +81,7 @@ export const stages: Stage[] = [
     status: "current",
     date: "Jun 09, 2026",
     dateShort: "09 JUN",
-    venue: "ADNOC Recreational Center",
+    venue: "Al Hosn Entertainment Center",
     city: "Al Dhannah",
     timeWindow: "4:00 — 10:00 PM",
     registerHref: "https://in.abudhabimarathon.events/core-x-stage-3-al-dhanna",
