@@ -1,11 +1,4 @@
-const RULEBOOK_HREF = "/rulebook/CoreX_Stage02_Rulebook.pdf";
-
-const meta = [
-  { label: "Pages", value: "15" },
-  { label: "Format", value: "PDF" },
-  { label: "Language", value: "EN" },
-  { label: "Updated", value: "18.05.26" },
-] as const;
+import type { Stage } from "@/lib/stages";
 
 const covers = [
   { label: "Race Standards", note: "Movement, lane discipline, penalties" },
@@ -13,8 +6,16 @@ const covers = [
   { label: "Safety & Conduct", note: "Athlete responsibilities, judge authority" },
 ] as const;
 
-export function Rulebook({ confirmed = true }: { confirmed?: boolean }) {
-  if (!confirmed) {
+export function Rulebook({
+  stage,
+  confirmed = true,
+}: {
+  stage?: Stage;
+  confirmed?: boolean;
+}) {
+  const pdfHref = stage?.rulebookPdf;
+
+  if (!confirmed || !pdfHref) {
     return (
       <section id="rulebook" className="border-b border-[var(--color-border)]">
         <div className="mx-auto max-w-[1440px] px-5 py-16 md:px-10 md:py-24">
@@ -43,11 +44,20 @@ export function Rulebook({ confirmed = true }: { confirmed?: boolean }) {
     );
   }
 
+  const stageLabel = stage?.label ?? "CoreX";
+  const numberPadded = stage?.numberPadded ?? "";
+  const venueLine = [stage?.venue, stage?.city].filter(Boolean).join(" · ");
+  const pages = stage?.rulebookPages;
+
+  const meta = [
+    { label: "Pages", value: pages ? String(pages) : "—" },
+    { label: "Format", value: "PDF" },
+    { label: "Language", value: "EN" },
+    { label: "Updated", value: stage?.rulebookUpdated ?? "—" },
+  ] as const;
+
   return (
-    <section
-      id="rulebook"
-      className="border-b border-[var(--color-border)]"
-    >
+    <section id="rulebook" className="border-b border-[var(--color-border)]">
       <div className="mx-auto max-w-[1440px] px-5 py-16 md:px-10 md:py-24">
         <p className="eyebrow mb-4">Official Document</p>
         <h2 className="font-display text-4xl md:text-6xl uppercase tracking-tight mb-4">
@@ -106,22 +116,16 @@ export function Rulebook({ confirmed = true }: { confirmed?: boolean }) {
             {/* CTAs */}
             <div className="flex flex-wrap items-center gap-3">
               <a
-                href={RULEBOOK_HREF}
+                href={pdfHref}
                 download
                 className="btn-volt"
-                aria-label="Download CoreX Stage 02 Rulebook PDF (691 KB)"
+                aria-label={`Download CoreX ${stageLabel} Rulebook PDF`}
               >
                 <DownloadIcon />
                 Download Rulebook
-                <span
-                  aria-hidden
-                  className="ml-1 font-mono text-[10px] uppercase tracking-widest opacity-70"
-                >
-                  691kb
-                </span>
               </a>
               <a
-                href={RULEBOOK_HREF}
+                href={pdfHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-ghost"
@@ -134,7 +138,12 @@ export function Rulebook({ confirmed = true }: { confirmed?: boolean }) {
 
           {/* RIGHT — document spine visual */}
           <div className="relative mx-auto w-full max-w-sm md:ml-auto">
-            <DocumentSpine />
+            <DocumentSpine
+              numberPadded={numberPadded}
+              stageLabel={stageLabel}
+              venueLine={venueLine}
+              pages={pages}
+            />
           </div>
         </div>
       </div>
@@ -161,7 +170,17 @@ function DownloadIcon() {
   );
 }
 
-function DocumentSpine() {
+function DocumentSpine({
+  numberPadded,
+  stageLabel,
+  venueLine,
+  pages,
+}: {
+  numberPadded: string;
+  stageLabel: string;
+  venueLine: string;
+  pages?: number;
+}) {
   return (
     <div
       className="relative aspect-[3/4] w-full overflow-hidden border border-[var(--color-border-strong)] bg-[var(--color-surface)]"
@@ -194,10 +213,10 @@ function DocumentSpine() {
       {/* Top meta row */}
       <div className="absolute left-6 right-6 top-6 flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)]">
         <span>CRX · RB</span>
-        <span>S02 / 08</span>
+        <span>S{numberPadded} / 08</span>
       </div>
 
-      {/* Center — giant outline 02 */}
+      {/* Center — giant outline stage number */}
       <div className="absolute inset-0 flex items-center justify-center">
         <span
           className="font-display leading-none text-transparent"
@@ -206,7 +225,7 @@ function DocumentSpine() {
             WebkitTextStroke: "1px var(--color-volt)",
           }}
         >
-          02
+          {numberPadded}
         </span>
       </div>
 
@@ -220,11 +239,11 @@ function DocumentSpine() {
         <p className="font-display text-xl uppercase leading-none tracking-tight md:text-2xl">
           CoreX
           <span className="ml-2 text-[var(--color-volt)]">·</span>
-          <span className="ml-2 text-[var(--color-fg-muted)]">Stage 02</span>
+          <span className="ml-2 text-[var(--color-fg-muted)]">{stageLabel}</span>
         </p>
         <p className="flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-muted)]">
-          <span>Hazza Bin Zayed · Al Ain</span>
-          <span>EN · 15p</span>
+          <span>{venueLine}</span>
+          <span>EN{pages ? ` · ${pages}p` : ""}</span>
         </p>
       </div>
     </div>
