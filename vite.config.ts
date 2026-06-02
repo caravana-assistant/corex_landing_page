@@ -15,9 +15,9 @@ let gitHash = "unknown";
 try { gitHash = execSync("git rev-parse --short HEAD").toString().trim(); } catch { /* not a git repo (e.g. Vercel build) */ }
 
 export default defineConfig({
-  // Relative base so the multi-file build also works when opened via
-  // file:// (no web server) and when dropped into any subpath on a host.
-  base: "/landingnodejs/",
+  // ASP.NET host serves under /landingnodejs/; Vercel (and dev) serve at root.
+  // Set DEPLOY_TARGET=aspnet for the ASP.NET bundle; default base is "/".
+  base: process.env.DEPLOY_TARGET === "aspnet" ? "/landingnodejs/" : "/",
   plugins: [
     react(),
     tailwindcss(),

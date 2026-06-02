@@ -35,6 +35,11 @@ export type Stage = {
   photos: GalleryPhoto[];
   eventId?: string;
   timeWindow?: string;
+  // Workout appears once timeWindow is set. The Rulebook is gated separately:
+  // it shows only when this stage has a published rulebook PDF.
+  rulebookPdf?: string;
+  rulebookPages?: number;
+  rulebookUpdated?: string; // "DD.MM.YY"
   results: DivisionResult[];
 };
 
@@ -63,6 +68,9 @@ export const stages: Stage[] = [
     city: "Al Ain",
     mapsHref: "https://maps.app.goo.gl/Vziib3gBaDeKczSo8",
     eventId: "1c9d5b45-489a-4126-94ec-ce96fd7431ed",
+    rulebookPdf: "/rulebook/CoreX_Stage02_Rulebook.pdf",
+    rulebookPages: 15,
+    rulebookUpdated: "23.05.26",
     photos: [],
     results: [],
   },
@@ -71,10 +79,15 @@ export const stages: Stage[] = [
     numberPadded: "03",
     label: "STAGE 03",
     status: "current",
-    date: "Jun 03, 2026",
-    dateShort: "03 JUN",
+    date: "Jun 09, 2026",
+    dateShort: "09 JUN",
+    venue: "Al Hosn Entertainment Center",
     city: "Al Dhannah",
+    timeWindow: "4:00 — 10:00 PM",
     registerHref: "https://in.abudhabimarathon.events/core-x-stage-3-al-dhanna",
+    rulebookPdf: "/rulebook/CoreX_Stage03_Rulebook.pdf",
+    rulebookPages: 14,
+    rulebookUpdated: "02.06.26",
     photos: [],
     results: [],
   },
