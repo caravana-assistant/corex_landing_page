@@ -1,16 +1,21 @@
 import { useState } from "react";
 
+// Stage 03 \u2014 CoreX 3rd Series \u00b7 Individual (Open). 200m run between stations,
+// then run to the finish line. Source: Briefing_Stage03 / 2026-06-09 EventGuide.
 const sequence = [
-  { type: "run", label: "150m Run" },
+  { type: "run", label: "200m Run" },
   { type: "station", label: "40 Wall Balls" },
-  { type: "run", label: "150m Run" },
-  { type: "station", label: "40m Burpee Broad Jump" },
-  { type: "run", label: "150m Run" },
-  { type: "station", label: "40m Sandbag Lunges" },
-  { type: "run", label: "150m Run" },
-  { type: "station", label: "80m Farmers Carry" },
-  { type: "run", label: "150m Run" },
+  { type: "run", label: "200m Run" },
   { type: "station", label: "500/400m Row" },
+  { type: "run", label: "200m Run" },
+  { type: "station", label: "80m DB Farmers Carry" },
+  { type: "run", label: "200m Run" },
+  { type: "station", label: "60m Burpee Broad Jump" },
+  { type: "run", label: "200m Run" },
+  { type: "station", label: "40m Sandbag Lunges" },
+  { type: "run", label: "200m Run" },
+  { type: "station", label: "500/400m Ski" },
+  { type: "run", label: "Run to Finish" },
 ] as const;
 
 const weights = [
@@ -19,13 +24,13 @@ const weights = [
   { division: "Double Men", dumbbell: "15kg", sandbag: "20kg", wallBall: "6kg" },
   { division: "Double Women", dumbbell: "10kg", sandbag: "10kg", wallBall: "4kg" },
   { division: "Relay", dumbbell: "15/10kg", sandbag: "20/10kg", wallBall: "6/4kg" },
-  { division: "Boys 14-17", dumbbell: "6kg", sandbag: "\u2014", wallBall: "6kg" },
-  { division: "Girls 14-17", dumbbell: "4kg", sandbag: "\u2014", wallBall: "4kg" },
-  { division: "Boys 11-13", dumbbell: "\u2014", sandbag: "\u2014", wallBall: "4kg" },
-  { division: "Girls 11-13", dumbbell: "\u2014", sandbag: "\u2014", wallBall: "2kg" },
-  { division: "Kids 7-10", dumbbell: "2kg", sandbag: "\u2014", wallBall: "\u2014" },
-  { division: "Men POD", dumbbell: "6kg", sandbag: "\u2014", wallBall: "4kg" },
-  { division: "Women POD", dumbbell: "4kg", sandbag: "\u2014", wallBall: "2kg" },
+  { division: "Junior Boys 14-17", dumbbell: "6kg", sandbag: "\u2014", wallBall: "6kg" },
+  { division: "Junior Girls 14-17", dumbbell: "4kg", sandbag: "\u2014", wallBall: "4kg" },
+  { division: "Youth Boys 11-13", dumbbell: "4kg", sandbag: "\u2014", wallBall: "\u2014" },
+  { division: "Youth Girls 11-13", dumbbell: "2kg", sandbag: "\u2014", wallBall: "\u2014" },
+  { division: "Kids 7-10", dumbbell: "\u2014", sandbag: "\u2014", wallBall: "\u2014" },
+  { division: "POD Men", dumbbell: "\u2014", sandbag: "\u2014", wallBall: "4kg" },
+  { division: "POD Women", dumbbell: "\u2014", sandbag: "\u2014", wallBall: "2kg" },
 ] as const;
 
 /* Station icons — inline SVGs, no external deps */
@@ -93,22 +98,22 @@ export function Workout({ confirmed = true }: { confirmed?: boolean }) {
           The Challenge
         </h2>
         <p className="max-w-2xl text-base text-[var(--color-fg-muted)] md:text-lg mb-6">
-          5 runs. 5 stations. For time.
+          6 stations. 200m run between each. For time.
         </p>
 
         {/* Format summary strip */}
         <div className="mb-12 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm md:text-base">
           <span className="inline-flex items-center gap-2 text-[var(--color-volt)]">
             <RunIcon />
-            <span className="font-display uppercase tracking-wide">150m Run</span>
+            <span className="font-display uppercase tracking-wide">200m Run</span>
           </span>
           <span className="text-[var(--color-fg-faint)]">between each station</span>
           <span aria-hidden className="hidden text-[var(--color-border-strong)] md:inline">/</span>
-          <span className="text-[var(--color-fg-muted)]">10 segments total</span>
+          <span className="text-[var(--color-fg-muted)]">{sequence.length} segments total</span>
         </div>
 
         {/* ── STATION CARDS GRID ── */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5 mb-10">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-10">
           {stations.map((station, i) => {
             const stepNum = (i + 1) * 2; // stations are even-numbered steps
             return (
@@ -129,7 +134,7 @@ export function Workout({ confirmed = true }: { confirmed?: boolean }) {
                     Station {String(i + 1).padStart(2, "0")}
                   </span>
                   <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-faint)]">
-                    Step {String(stepNum).padStart(2, "0")}/10
+                    Step {String(stepNum).padStart(2, "0")}/{sequence.length}
                   </span>
                 </div>
 
@@ -147,7 +152,7 @@ export function Workout({ confirmed = true }: { confirmed?: boolean }) {
                 <div className="mt-4 flex items-center gap-2 border-t border-[var(--color-border)] pt-3">
                   <RunIcon />
                   <span className="font-mono text-xs text-[var(--color-volt)] uppercase tracking-widest">
-                    150m Run {i < stations.length - 1 ? "→" : "· Finish"}
+                    {i < stations.length - 1 ? "200m Run →" : "Run to Finish"}
                   </span>
                 </div>
               </div>
@@ -194,7 +199,7 @@ export function Workout({ confirmed = true }: { confirmed?: boolean }) {
               Doubles
             </p>
             <p className="text-sm text-[var(--color-fg-muted)] md:text-base leading-relaxed">
-              Same format, synchro runs, higher reps (60), 1000/800m Row.
+              Synchro 200m runs, 80 Wall Balls, 800/600m Row & Ski, 60m Sandbag Lunges.
             </p>
           </div>
           <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
