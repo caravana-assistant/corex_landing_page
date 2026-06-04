@@ -87,7 +87,7 @@ export const stages: Stage[] = [
     registerHref: "https://in.abudhabimarathon.events/core-x-stage-3-al-dhanna",
     rulebookPdf: "/rulebook/CoreX_Stage03_Rulebook.pdf",
     rulebookPages: 14,
-    rulebookUpdated: "02.06.26",
+    rulebookUpdated: "04.06.26",
     photos: [],
     results: [],
   },
