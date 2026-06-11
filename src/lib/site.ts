@@ -40,7 +40,7 @@ export const site = {
   cta: {
     primary: {
       label: "Register Now",
-      href: "https://in.abudhabimarathon.events/corex--stage-2?currentPage=select-competition",
+      href: "https://in.abudhabimarathon.events/core-x-stage-3-al-dhanna",
       external: true,
     },
     secondary: { label: "Watch Stage 1 Highlights", href: "#highlights" },

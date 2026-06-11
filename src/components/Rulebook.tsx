@@ -13,9 +13,12 @@ export function Rulebook({
   stage?: Stage;
   confirmed?: boolean;
 }) {
-  const pdfHref = stage?.rulebookPdf;
+  // Prefer the editable external link (set in the corexapp); fall back to the bundled PDF.
+  const rulebookLink = stage?.rulebookHref ?? stage?.rulebookPdf;
+  const briefingLink = stage?.eventBriefingHref;
+  const rulebookExternal = !!stage?.rulebookHref;
 
-  if (!confirmed || !pdfHref) {
+  if (!confirmed || (!rulebookLink && !briefingLink)) {
     return (
       <section id="rulebook" className="border-b border-[var(--color-border)]">
         <div className="mx-auto max-w-[1440px] px-5 py-16 md:px-10 md:py-24">
@@ -115,24 +118,54 @@ export function Rulebook({
 
             {/* CTAs */}
             <div className="flex flex-wrap items-center gap-3">
-              <a
-                href={pdfHref}
-                download
-                className="btn-volt"
-                aria-label={`Download CoreX ${stageLabel} Rulebook PDF`}
-              >
-                <DownloadIcon />
-                Download Rulebook
-              </a>
-              <a
-                href={pdfHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-ghost"
-              >
-                View Online
-                <span aria-hidden>↗</span>
-              </a>
+              {rulebookLink && (
+                rulebookExternal ? (
+                  <a
+                    href={rulebookLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-volt"
+                    aria-label={`Open CoreX ${stageLabel} Rulebook`}
+                  >
+                    <DownloadIcon />
+                    View Rulebook
+                    <span aria-hidden>↗</span>
+                  </a>
+                ) : (
+                  <>
+                    <a
+                      href={rulebookLink}
+                      download
+                      className="btn-volt"
+                      aria-label={`Download CoreX ${stageLabel} Rulebook PDF`}
+                    >
+                      <DownloadIcon />
+                      Download Rulebook
+                    </a>
+                    <a
+                      href={rulebookLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-ghost"
+                    >
+                      View Online
+                      <span aria-hidden>↗</span>
+                    </a>
+                  </>
+                )
+              )}
+              {briefingLink && (
+                <a
+                  href={briefingLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-ghost"
+                  aria-label={`Open CoreX ${stageLabel} Event Briefing`}
+                >
+                  Event Briefing
+                  <span aria-hidden>↗</span>
+                </a>
+              )}
             </div>
           </div>
 

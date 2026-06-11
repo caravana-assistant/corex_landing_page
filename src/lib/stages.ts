@@ -40,6 +40,8 @@ export type Stage = {
   rulebookPdf?: string;
   rulebookPages?: number;
   rulebookUpdated?: string; // "DD.MM.YY"
+  rulebookHref?: string; // editable external link (overrides rulebookPdf)
+  eventBriefingHref?: string; // editable external link to the stage event briefing
   results: DivisionResult[];
 };
 
@@ -81,9 +83,9 @@ export const stages: Stage[] = [
     status: "current",
     date: "Jun 20, 2026",
     dateShort: "20 JUN",
-    venue: "Al Hosn Entertainment Center",
-    city: "Al Dhannah",
-    timeWindow: "4:00 — 10:00 PM",
+    venue: "ADNEC",
+    city: "Abu Dhabi",
+    timeWindow: "9:00 AM — 8:00 PM",
     registerHref: "https://in.abudhabimarathon.events/core-x-stage-3-al-dhanna",
     rulebookPdf: "/rulebook/CoreX_Stage03_Rulebook.pdf",
     rulebookPages: 14,
@@ -95,7 +97,13 @@ export const stages: Stage[] = [
     number: 4,
     numberPadded: "04",
     label: "STAGE 04",
-    status: "tbc",
+    status: "current",
+    date: "Jun 27, 2026",
+    dateShort: "27 JUN",
+    venue: "ADNEC",
+    city: "Al Ain",
+    timeWindow: "9:00 AM — 8:00 PM",
+    registerHref: "https://in.abudhabimarathon.events/core-x-stage-4--adnec-al-ain",
     photos: [],
     results: [],
   },

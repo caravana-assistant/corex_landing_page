@@ -29,3 +29,4 @@ corex-stage2-deploy-*.zip
 *.njsproj
 *.sln
 *.sw?
+.vercel
