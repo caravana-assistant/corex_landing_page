@@ -5,7 +5,7 @@ import { useActiveSection } from "@/lib/useActiveSection";
 
 const NAV_IDS = site.nav.map((n) => n.href.replace("#", ""));
 
-export function Header({ stageLabel, stageTotal }: { stageLabel?: string; stageTotal?: number }) {
+export function Header({ stageLabel, stageTotal, registerHref }: { stageLabel?: string; stageTotal?: number; registerHref?: string }) {
   const active = useActiveSection(NAV_IDS);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -87,7 +87,7 @@ export function Header({ stageLabel, stageTotal }: { stageLabel?: string; stageT
               </a>
             ) : (
               <a
-                href={site.cta.primary.href}
+                href={registerHref ?? site.cta.primary.href}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-volt text-xs md:text-sm"

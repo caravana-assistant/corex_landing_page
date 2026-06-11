@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 // Stage 03 \u2014 CoreX 3rd Series \u00b7 Individual (Open). 200m run between stations,
-// then run to the finish line. Source: Briefing_Stage03 / 2026-06-09 EventGuide.
+// then run to the finish line. Source: Briefing_Stage03 / 2026-06-16 EventGuide.
 const sequence = [
   { type: "run", label: "200m Run" },
   { type: "station", label: "40 Wall Balls" },

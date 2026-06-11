@@ -14,11 +14,17 @@ interface StageConfigRow {
   register_href: string | null;
   event_id: string | null;
   time_window: string | null;
+  rulebook_href: string | null;
+  event_briefing_href: string | null;
   postponed_message: string | null;
   recap_athletes: number | null;
   recap_divisions: number | null;
   recap_lanes: number | null;
 }
+
+// Static fallback for first paint: pre-select the current stage so the hero
+// renders real stage data instead of generic site defaults (kills the date "flash").
+const initialActive = staticStages.find((s) => s.status === "current") ?? null;
 
 export function useStageConfig(): {
   stages: Stage[];
@@ -26,7 +32,7 @@ export function useStageConfig(): {
   loading: boolean;
 } {
   const [stages, setStages] = useState<Stage[]>(staticStages);
-  const [activeStage, setActiveStage] = useState<Stage | null>(null);
+  const [activeStage, setActiveStage] = useState<Stage | null>(initialActive);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -63,6 +69,8 @@ export function useStageConfig(): {
           registerHref: cfg.register_href ?? s.registerHref,
           eventId: cfg.event_id ?? s.eventId,
           timeWindow: cfg.time_window ?? s.timeWindow,
+          rulebookHref: cfg.rulebook_href ?? s.rulebookHref,
+          eventBriefingHref: cfg.event_briefing_href ?? s.eventBriefingHref,
           recap:
             cfg.recap_athletes != null
               ? {

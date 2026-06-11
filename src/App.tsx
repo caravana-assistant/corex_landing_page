@@ -34,7 +34,7 @@ export default function App() {
     <ErrorBoundary>
     <div className="flex min-h-screen flex-col bg-[var(--color-bg)] text-[var(--color-fg)]">
       <ScrollProgress />
-      <Header stageLabel={activeSite.stage.label} stageTotal={activeSite.stage.total} />
+      <Header stageLabel={activeSite.stage.label} stageTotal={activeSite.stage.total} registerHref={activeSite.cta.primary.href} />
       <main className="flex-1 pt-20">
         {/* HERO */}
         <section
