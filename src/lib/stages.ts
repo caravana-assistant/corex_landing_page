@@ -91,9 +91,8 @@ export const stages: Stage[] = [
     timeWindow: "9:00 AM — 8:00 PM",
     registerHref: "https://in.abudhabimarathon.events/core-x-stage-3-al-dhanna",
     workoutTbc: true, // workout changed (no rig) — hide until new version published
-    rulebookPdf: "/rulebook/CoreX_Stage03_Rulebook.pdf",
-    rulebookPages: 14,
-    rulebookUpdated: "04.06.26",
+    // Rulebook is now driven by corexapp (stage_config.rulebook_href). No hardcoded
+    // PDF here: empty in the app = "Rulebook to be confirmed" on the site.
     photos: [],
     results: [],
   },
