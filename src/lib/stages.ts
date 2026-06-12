@@ -40,6 +40,9 @@ export type Stage = {
   // The Rulebook is gated separately: it shows only when this stage has a
   // published rulebook PDF.
   workoutTbc?: boolean;
+  // Event-day schedule. Data-driven: the timeline shows ONLY when entries are
+  // provided here. No entries = "Schedule to be confirmed" (no fabricated times).
+  schedule?: { time: string; activity: string }[];
   rulebookPdf?: string;
   rulebookPages?: number;
   rulebookUpdated?: string; // "DD.MM.YY"

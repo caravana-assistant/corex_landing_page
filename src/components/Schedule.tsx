@@ -1,19 +1,12 @@
 import type { Stage } from "@/lib/stages";
 
-const defaultTimeline = [
-  { time: "4:00 PM", activity: "Registration & Check-in" },
-  { time: "4:30 PM", activity: "Event Briefing" },
-  { time: "5:00 PM", activity: "Competition Starts" },
-  { time: "", activity: "Kids \u2192 POD \u2192 Opens \u2192 Doubles \u2192 Relay" },
-  { time: "10:00 PM", activity: "Event Close" },
-] as const;
-
 type Props = {
   activeStage?: Stage | null;
 };
 
 export function Schedule({ activeStage }: Props) {
-  const hasSchedule = !!activeStage?.timeWindow;
+  const timeline = activeStage?.schedule ?? [];
+  const hasSchedule = timeline.length > 0;
   const dateLabel = activeStage?.date ?? "Date to be confirmed";
 
   return (
@@ -38,7 +31,7 @@ export function Schedule({ activeStage }: Props) {
                 className="absolute left-[59px] top-4 bottom-4 w-px bg-[var(--color-border)] md:left-[79px]"
               />
               <div className="space-y-0">
-                {defaultTimeline.map((entry, i) => (
+                {timeline.map((entry, i) => (
                   <div key={i} className="relative flex items-start gap-5 py-4">
                     <span className="w-[44px] shrink-0 text-right font-mono text-sm text-[var(--color-volt)] md:w-[64px] md:text-base">
                       {entry.time}
