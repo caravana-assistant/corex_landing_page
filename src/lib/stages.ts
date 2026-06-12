@@ -35,11 +35,12 @@ export type Stage = {
   photos: GalleryPhoto[];
   eventId?: string;
   timeWindow?: string;
-  // Workout appears once timeWindow is set, UNLESS workoutTbc forces the
-  // "to be confirmed" placeholder (e.g. workout changed and isn't published yet).
+  // Workout is opt-in per stage: the timeline + weights show ONLY when
+  // workoutConfirmed is true (the content lives in Workout.tsx). Default/absent
+  // = "Workout to be confirmed" — no stage inherits another stage's workout.
   // The Rulebook is gated separately: it shows only when this stage has a
   // published rulebook PDF.
-  workoutTbc?: boolean;
+  workoutConfirmed?: boolean;
   // Event-day schedule. Data-driven: the timeline shows ONLY when entries are
   // provided here. No entries = "Schedule to be confirmed" (no fabricated times).
   schedule?: { time: string; activity: string }[];
@@ -93,7 +94,7 @@ export const stages: Stage[] = [
     city: "Abu Dhabi",
     timeWindow: "9:00 AM — 8:00 PM",
     registerHref: "https://in.abudhabimarathon.events/core-x-stage-3-al-dhanna",
-    workoutTbc: true, // workout changed (no rig) — hide until new version published
+    // workoutConfirmed omitted → "Workout to be confirmed" (no-rig version not published yet).
     // Rulebook is now driven by corexapp (stage_config.rulebook_href). No hardcoded
     // PDF here: empty in the app = "Rulebook to be confirmed" on the site.
     photos: [],
