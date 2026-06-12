@@ -35,8 +35,11 @@ export type Stage = {
   photos: GalleryPhoto[];
   eventId?: string;
   timeWindow?: string;
-  // Workout appears once timeWindow is set. The Rulebook is gated separately:
-  // it shows only when this stage has a published rulebook PDF.
+  // Workout appears once timeWindow is set, UNLESS workoutTbc forces the
+  // "to be confirmed" placeholder (e.g. workout changed and isn't published yet).
+  // The Rulebook is gated separately: it shows only when this stage has a
+  // published rulebook PDF.
+  workoutTbc?: boolean;
   rulebookPdf?: string;
   rulebookPages?: number;
   rulebookUpdated?: string; // "DD.MM.YY"
@@ -87,6 +90,7 @@ export const stages: Stage[] = [
     city: "Abu Dhabi",
     timeWindow: "9:00 AM — 8:00 PM",
     registerHref: "https://in.abudhabimarathon.events/core-x-stage-3-al-dhanna",
+    workoutTbc: true, // workout changed (no rig) — hide until new version published
     rulebookPdf: "/rulebook/CoreX_Stage03_Rulebook.pdf",
     rulebookPages: 14,
     rulebookUpdated: "04.06.26",
