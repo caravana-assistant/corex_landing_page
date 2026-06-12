@@ -97,6 +97,20 @@ export const stages: Stage[] = [
     // workoutConfirmed omitted → "Workout to be confirmed" (no-rig version not published yet).
     // Rulebook is now driven by corexapp (stage_config.rulebook_href). No hardcoded
     // PDF here: empty in the app = "Rulebook to be confirmed" on the site.
+    schedule: [
+      { time: "8:00 AM", activity: "Check-in & T-shirt — POD" },
+      { time: "9:00 AM", activity: "POD · 9:00–10:30 AM" },
+      { time: "9:15 AM", activity: "Check-in & T-shirt — Kids" },
+      { time: "10:00 AM", activity: "Kids · 10:00–11:30 AM" },
+      { time: "11:30 AM", activity: "Awards — POD & Kids" },
+      { time: "12:00 PM", activity: "Lunch Break · 12:00–2:00 PM" },
+      { time: "2:00 PM", activity: "Check-in & T-shirt — Women" },
+      { time: "3:00 PM", activity: "Women, Open / Doubles · 3:00–4:30 PM" },
+      { time: "3:30 PM", activity: "Check-in & T-shirt — Men" },
+      { time: "4:30 PM", activity: "Men, Open / Doubles · 4:30–6:30 PM" },
+      { time: "6:30 PM", activity: "Relays" },
+      { time: "7:00 PM", activity: "Awards — Women, Men & Relays" },
+    ],
     photos: [],
     results: [],
   },

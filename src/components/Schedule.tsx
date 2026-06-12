@@ -28,12 +28,12 @@ export function Schedule({ activeStage }: Props) {
             <div className="relative max-w-xl">
               <div
                 aria-hidden
-                className="absolute left-[59px] top-4 bottom-4 w-px bg-[var(--color-border)] md:left-[79px]"
+                className="absolute left-[73px] top-4 bottom-4 w-px bg-[var(--color-border)] md:left-[91px]"
               />
               <div className="space-y-0">
                 {timeline.map((entry, i) => (
                   <div key={i} className="relative flex items-start gap-5 py-4">
-                    <span className="w-[44px] shrink-0 text-right font-mono text-sm text-[var(--color-volt)] md:w-[64px] md:text-base">
+                    <span className="w-[58px] shrink-0 whitespace-nowrap text-right font-mono text-sm text-[var(--color-volt)] md:w-[76px]">
                       {entry.time}
                     </span>
                     <div className="relative z-10 mt-1.5 flex h-3 w-3 shrink-0 items-center justify-center">
