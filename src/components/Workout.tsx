@@ -19,11 +19,11 @@ const sequence = [
 ] as const;
 
 const weights = [
-  { division: "Men Open", dumbbell: "15kg", sandbag: "20kg", thruster: "15kg" },
-  { division: "Women Open", dumbbell: "10kg", sandbag: "10kg", thruster: "10kg" },
-  { division: "Double Men", dumbbell: "15kg", sandbag: "20kg", thruster: "15kg" },
-  { division: "Double Women", dumbbell: "10kg", sandbag: "10kg", thruster: "10kg" },
-  { division: "Relay", dumbbell: "15/10kg", sandbag: "20/10kg", thruster: "15/10kg" },
+  { division: "Men Open", dumbbell: "15kg", sandbag: "20kg", thruster: "7.5kg" },
+  { division: "Women Open", dumbbell: "10kg", sandbag: "10kg", thruster: "5kg" },
+  { division: "Double Men", dumbbell: "15kg", sandbag: "20kg", thruster: "7.5kg" },
+  { division: "Double Women", dumbbell: "10kg", sandbag: "10kg", thruster: "5kg" },
+  { division: "Relay", dumbbell: "15/10kg", sandbag: "20/10kg", thruster: "7.5/5kg" },
   { division: "Junior Boys 14-17", dumbbell: "7.5kg", sandbag: "\u2014", thruster: "7.5kg" },
   { division: "Junior Girls 14-17", dumbbell: "5kg", sandbag: "\u2014", thruster: "5kg" },
   { division: "Youth Boys 11-13", dumbbell: "5kg", sandbag: "\u2014", thruster: "\u2014 (Goblet)" },
