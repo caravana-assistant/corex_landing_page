@@ -13,8 +13,12 @@ export function Rulebook({
   stage?: Stage;
   confirmed?: boolean;
 }) {
+  // Bundled PDFs live under the build base ("/" on Vercel, "/landingnodejs/" on the ASP.NET deploy),
+  // so prefix BASE_URL. External links (set in the corexapp) are used as-is.
+  const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+  const toLocal = (p?: string) => (p ? base + "/" + p.replace(/^\//, "") : undefined);
   // Prefer the editable external link (set in the corexapp); fall back to the bundled PDF.
-  const rulebookLink = stage?.rulebookHref ?? stage?.rulebookPdf;
+  const rulebookLink = stage?.rulebookHref ?? toLocal(stage?.rulebookPdf);
   const briefingLink = stage?.eventBriefingHref;
   const rulebookExternal = !!stage?.rulebookHref;
 
