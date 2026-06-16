@@ -4,7 +4,7 @@ import { useState } from "react";
 // then run to the finish line. Source: Briefing_Stage03 / 2026-06-16 EventGuide.
 const sequence = [
   { type: "run", label: "200m Run" },
-  { type: "station", label: "40 Wall Balls" },
+  { type: "station", label: "60 Thrusters" },
   { type: "run", label: "200m Run" },
   { type: "station", label: "500/400m Row" },
   { type: "run", label: "200m Run" },
@@ -19,18 +19,18 @@ const sequence = [
 ] as const;
 
 const weights = [
-  { division: "Men Open", dumbbell: "15kg", sandbag: "20kg", wallBall: "6kg" },
-  { division: "Women Open", dumbbell: "10kg", sandbag: "10kg", wallBall: "4kg" },
-  { division: "Double Men", dumbbell: "15kg", sandbag: "20kg", wallBall: "6kg" },
-  { division: "Double Women", dumbbell: "10kg", sandbag: "10kg", wallBall: "4kg" },
-  { division: "Relay", dumbbell: "15/10kg", sandbag: "20/10kg", wallBall: "6/4kg" },
-  { division: "Junior Boys 14-17", dumbbell: "6kg", sandbag: "\u2014", wallBall: "6kg" },
-  { division: "Junior Girls 14-17", dumbbell: "4kg", sandbag: "\u2014", wallBall: "4kg" },
-  { division: "Youth Boys 11-13", dumbbell: "4kg", sandbag: "\u2014", wallBall: "\u2014" },
-  { division: "Youth Girls 11-13", dumbbell: "2kg", sandbag: "\u2014", wallBall: "\u2014" },
-  { division: "Kids 7-10", dumbbell: "\u2014", sandbag: "\u2014", wallBall: "\u2014" },
-  { division: "POD Men", dumbbell: "\u2014", sandbag: "\u2014", wallBall: "4kg" },
-  { division: "POD Women", dumbbell: "\u2014", sandbag: "\u2014", wallBall: "2kg" },
+  { division: "Men Open", dumbbell: "15kg", sandbag: "20kg", thruster: "15kg" },
+  { division: "Women Open", dumbbell: "10kg", sandbag: "10kg", thruster: "10kg" },
+  { division: "Double Men", dumbbell: "15kg", sandbag: "20kg", thruster: "15kg" },
+  { division: "Double Women", dumbbell: "10kg", sandbag: "10kg", thruster: "10kg" },
+  { division: "Relay", dumbbell: "15/10kg", sandbag: "20/10kg", thruster: "15/10kg" },
+  { division: "Junior Boys 14-17", dumbbell: "7.5kg", sandbag: "\u2014", thruster: "7.5kg" },
+  { division: "Junior Girls 14-17", dumbbell: "5kg", sandbag: "\u2014", thruster: "5kg" },
+  { division: "Youth Boys 11-13", dumbbell: "5kg", sandbag: "\u2014", thruster: "\u2014 (Goblet)" },
+  { division: "Youth Girls 11-13", dumbbell: "2kg", sandbag: "\u2014", thruster: "\u2014 (Goblet)" },
+  { division: "Kids 7-10", dumbbell: "\u2014", sandbag: "\u2014", thruster: "\u2014" },
+  { division: "POD Men", dumbbell: "\u2014", sandbag: "\u2014", thruster: "5kg" },
+  { division: "POD Women", dumbbell: "\u2014", sandbag: "\u2014", thruster: "5kg" },
 ] as const;
 
 /* Station icons — inline SVGs, no external deps */
@@ -199,7 +199,7 @@ export function Workout({ confirmed = true }: { confirmed?: boolean }) {
               Doubles
             </p>
             <p className="text-sm text-[var(--color-fg-muted)] md:text-base leading-relaxed">
-              Synchro 200m runs, 80 Wall Balls, 800/600m Row & Ski, 60m Sandbag Lunges.
+              Synchro 200m runs, 100 Thrusters, 800/600m Row & Ski, 60m Sandbag Lunges.
             </p>
           </div>
           <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
@@ -244,7 +244,7 @@ export function Workout({ confirmed = true }: { confirmed?: boolean }) {
               <table className="w-full min-w-[480px] text-left">
                 <thead>
                   <tr className="border-b border-[var(--color-border)] bg-[var(--color-surface)]">
-                    {["Division", "Dumbbell", "Sandbag", "Wall Ball"].map(
+                    {["Division", "Dumbbell", "Sandbag", "Thruster"].map(
                       (h) => (
                         <th
                           key={h}
@@ -274,7 +274,7 @@ export function Workout({ confirmed = true }: { confirmed?: boolean }) {
                         {row.sandbag}
                       </td>
                       <td className="px-6 py-3.5 font-mono text-sm text-[var(--color-fg-muted)]">
-                        {row.wallBall}
+                        {row.thruster}
                       </td>
                     </tr>
                   ))}
