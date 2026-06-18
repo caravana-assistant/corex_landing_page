@@ -11,6 +11,7 @@ import { Slogan } from "@/components/Slogan";
 import { Divisions } from "@/components/Divisions";
 import { Schedule } from "@/components/Schedule";
 import { Venue } from "@/components/Venue";
+import { MySchedule } from "@/components/MySchedule";
 import { WhatsAppIcon } from "@/components/icons";
 import { useSelectedStage } from "@/lib/useSelectedStage";
 import { site, siteFromActiveStage } from "@/lib/site";
@@ -224,6 +225,7 @@ export default function App() {
 
         <Divisions />
         <Schedule activeStage={activeStage} />
+        <MySchedule eventId={activeStage?.eventId ?? null} />
         <Venue activeStage={activeStage} />
       </main>
       <Footer />

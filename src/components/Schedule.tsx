@@ -85,12 +85,7 @@ export function Schedule({ activeStage }: Props) {
           <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-fg-faint)]">
             Already registered?
           </p>
-          <a
-            href="https://corexchallenge.vercel.app/my-schedule"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-volt text-xs"
-          >
+          <a href="#my-schedule" className="btn-volt text-xs">
             Check your schedule
           </a>
         </div>
