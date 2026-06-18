@@ -23,16 +23,34 @@ interface Row {
   wod_name: string | null;
   wod_time_cap: number | null;
   wod_rule: string | null;
+  wod_exercises: Exercise[] | null;
+}
+
+interface Exercise {
+  seq: number; name: string; target: number | null; unit: string | null;
+  equipment: string | null; synchro: boolean | null;
+}
+
+function exerciseLabel(e: Exercise): string {
+  const amount = e.target != null ? `${e.target}${e.unit ?? ''} ` : '';
+  const eq = e.equipment ? ` (${e.equipment})` : '';
+  const sy = e.synchro ? ' · synchro' : '';
+  return `${amount}${e.name}${eq}${sy}`.trim();
 }
 
 function WorkoutBlock({ row }: { row: Row }) {
-  if (!row.wod_name && !row.wod_time_cap) return null;
+  if (!row.wod_name && !row.wod_time_cap && !(row.wod_exercises && row.wod_exercises.length)) return null;
   return (
     <div className="mt-4 rounded border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
       <p className="text-xs uppercase tracking-widest text-[var(--color-fg-faint)]">Workout</p>
-      {row.wod_name && <p className="mt-1 text-[var(--color-fg)]">{row.wod_name}</p>}
+      {row.wod_name && <p className="mt-1 font-medium text-[var(--color-fg)]">{row.wod_name}</p>}
       {row.wod_time_cap != null && <p className="mt-1 text-sm text-[var(--color-fg-muted)]">Time cap: {row.wod_time_cap} min</p>}
-      {row.wod_rule && <p className="mt-1 text-sm text-[var(--color-fg-muted)]">{row.wod_rule}</p>}
+      {row.wod_exercises && row.wod_exercises.length > 0 && (
+        <ol className="mt-3 list-decimal space-y-1 pl-5 text-sm text-[var(--color-fg)]">
+          {row.wod_exercises.map((e) => <li key={e.seq}>{exerciseLabel(e)}</li>)}
+        </ol>
+      )}
+      {row.wod_rule && <p className="mt-3 text-xs text-[var(--color-fg-faint)]">{row.wod_rule}</p>}
     </div>
   );
 }
