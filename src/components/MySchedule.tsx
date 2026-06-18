@@ -20,6 +20,21 @@ interface Row {
   heat_number: number | null;
   heat_lane: number | null;
   result_time_seconds: number | null;
+  wod_name: string | null;
+  wod_time_cap: number | null;
+  wod_rule: string | null;
+}
+
+function WorkoutBlock({ row }: { row: Row }) {
+  if (!row.wod_name && !row.wod_time_cap) return null;
+  return (
+    <div className="mt-4 rounded border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+      <p className="text-xs uppercase tracking-widest text-[var(--color-fg-faint)]">Workout</p>
+      {row.wod_name && <p className="mt-1 text-[var(--color-fg)]">{row.wod_name}</p>}
+      {row.wod_time_cap != null && <p className="mt-1 text-sm text-[var(--color-fg-muted)]">Time cap: {row.wod_time_cap} min</p>}
+      {row.wod_rule && <p className="mt-1 text-sm text-[var(--color-fg-muted)]">{row.wod_rule}</p>}
+    </div>
+  );
 }
 
 function fmtResult(s: number | null): string | null {
@@ -81,6 +96,7 @@ export function MySchedule({ eventId }: { eventId: string | null }) {
             <p className="font-display text-2xl text-[var(--color-fg)]">{row.full_name}</p>
             <p className="mt-2 text-sm text-[var(--color-fg)]">Division: {DIVISION_LABELS[row.division] ?? row.division}</p>
             <p className="mt-4 text-[var(--color-volt)]">Grouping not published yet — please check back later.</p>
+            <WorkoutBlock row={row} />
           </div>
         )}
 
@@ -95,6 +111,7 @@ export function MySchedule({ eventId }: { eventId: string | null }) {
               <dt className="text-[var(--color-fg-faint)]">Heat</dt><dd className="text-[var(--color-fg)]">{row.heat_number ?? '—'}{row.heat_lane ? ` · lane ${row.heat_lane}` : ''}</dd>
               <dt className="text-[var(--color-fg-faint)]">Result</dt><dd className="text-[var(--color-fg)]">{fmtResult(row.result_time_seconds) ?? '—'}</dd>
             </dl>
+            <WorkoutBlock row={row} />
             <p className="mt-4 text-xs text-[var(--color-fg-faint)]">Times are approximate and may change — follow the CoreX WhatsApp group and socials.</p>
           </div>
         )}
