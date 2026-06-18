@@ -76,7 +76,15 @@ export function MySchedule({ eventId }: { eventId: string | null }) {
         {error && <p className="mt-4 text-sm text-red-400">{error}</p>}
         {notFound && <p className="mt-4 text-sm text-amber-400">We couldn't find your registration. Check your phone and email.</p>}
 
-        {row && (
+        {row && !row.group_label && (
+          <div className="mt-8 rounded border border-[var(--color-border)] bg-[var(--color-surface-2)] p-6">
+            <p className="font-display text-2xl text-[var(--color-fg)]">{row.full_name}</p>
+            <p className="mt-2 text-sm text-[var(--color-fg)]">Division: {DIVISION_LABELS[row.division] ?? row.division}</p>
+            <p className="mt-4 text-[var(--color-volt)]">Grouping not published yet — please check back later.</p>
+          </div>
+        )}
+
+        {row && row.group_label && (
           <div className="mt-8 rounded border border-[var(--color-border)] bg-[var(--color-surface-2)] p-6">
             <p className="font-display text-2xl text-[var(--color-fg)]">{row.full_name}</p>
             <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">

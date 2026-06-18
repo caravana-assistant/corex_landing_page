@@ -31,6 +31,24 @@ export default function App() {
     ? { ...site, ...siteFromActiveStage(activeStage) }
     : site;
 
+  const isMySchedulePage =
+    typeof window !== 'undefined' &&
+    window.location.pathname.replace(/\/+$/, '') === '/my-schedule';
+
+  if (isMySchedulePage) {
+    return (
+      <ErrorBoundary>
+        <div className="flex min-h-screen flex-col bg-[var(--color-bg)] text-[var(--color-fg)]">
+          <Header stageLabel={activeSite.stage.label} stageTotal={activeSite.stage.total} registerHref={activeSite.cta.primary.href} />
+          <main className="flex-1 pt-20">
+            <MySchedule eventId={activeStage?.eventId ?? null} />
+          </main>
+          <Footer />
+        </div>
+      </ErrorBoundary>
+    );
+  }
+
   return (
     <ErrorBoundary>
     <div className="flex min-h-screen flex-col bg-[var(--color-bg)] text-[var(--color-fg)]">
