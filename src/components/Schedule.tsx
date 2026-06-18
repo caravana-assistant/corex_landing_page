@@ -81,6 +81,19 @@ export function Schedule({ activeStage }: Props) {
             </a>
           </div>
         )}
+        <div className="mt-10 flex flex-col items-center gap-2 text-center">
+          <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-fg-faint)]">
+            Already registered?
+          </p>
+          <a
+            href="https://corexchallenge.vercel.app/my-schedule"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-volt text-xs"
+          >
+            Check your schedule
+          </a>
+        </div>
       </div>
     </section>
   );
