@@ -1,5 +1,8 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
+
+const LS_PHONE = 'corex.myschedule.phone4';
+const LS_YEAR = 'corex.myschedule.birthyear';
 
 const DIVISION_LABELS: Record<string, string> = {
   open_m: 'Open Men', open_w: 'Open Women',
@@ -62,22 +65,19 @@ function fmtResult(s: number | null): string | null {
 
 export function MySchedule({ eventId }: { eventId: string | null }) {
   const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
+  const [birthYear, setBirthYear] = useState('');
   const [busy, setBusy] = useState(false);
   const [row, setRow] = useState<Row | null>(null);
   const [notFound, setNotFound] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null); setNotFound(false); setRow(null);
+  const doLookup = useCallback(async (last4: string, year: string) => {
     if (!eventId) { setError('No active event right now.'); return; }
-    const last4 = phone.replace(/\D/g, '').slice(-4);
-    if (last4.length < 4 || !email.trim()) { setError('Enter the last 4 digits of your phone and your email.'); return; }
+    setError(null); setNotFound(false); setRow(null);
     setBusy(true);
     try {
       const { data, error } = await supabase.rpc('lookup_my_schedule', {
-        p_event: eventId, p_phone_last4: last4, p_email: email.trim(),
+        p_event: eventId, p_phone_last4: last4, p_birth_year: year,
       });
       if (error) throw new Error(error.message);
       const r = (Array.isArray(data) ? data[0] : data) as Row | undefined;
@@ -85,6 +85,34 @@ export function MySchedule({ eventId }: { eventId: string | null }) {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Lookup failed.');
     } finally { setBusy(false); }
+  }, [eventId]);
+
+  // Prefill from cache and auto-lookup when both validators are saved
+  useEffect(() => {
+    const p = localStorage.getItem(LS_PHONE) ?? '';
+    const y = localStorage.getItem(LS_YEAR) ?? '';
+    if (p) setPhone(p);
+    if (y) setBirthYear(y);
+    if (eventId && p.length === 4 && y.length === 4) doLookup(p, y);
+  }, [eventId, doLookup]);
+
+  async function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const last4 = phone.replace(/\D/g, '').slice(-4);
+    const year = birthYear.replace(/\D/g, '').slice(0, 4);
+    if (last4.length !== 4 || year.length !== 4) {
+      setError('Enter the last 4 digits of your phone and your 4-digit birth year.');
+      return;
+    }
+    localStorage.setItem(LS_PHONE, last4);
+    localStorage.setItem(LS_YEAR, year);
+    doLookup(last4, year);
+  }
+
+  function clearSaved() {
+    localStorage.removeItem(LS_PHONE);
+    localStorage.removeItem(LS_YEAR);
+    setPhone(''); setBirthYear(''); setRow(null); setNotFound(false); setError(null);
   }
 
   return (
@@ -93,21 +121,30 @@ export function MySchedule({ eventId }: { eventId: string | null }) {
         <p className="eyebrow mb-2">Athletes</p>
         <h2 className="font-display text-4xl text-[var(--color-fg)] md:text-5xl">My Schedule</h2>
         <p className="mt-3 text-sm text-[var(--color-fg-muted)] md:text-base">
-          Check your group and approximate competition time. Enter the last 4 digits of your phone and the email you registered with.
+          Check your group and approximate competition time. Enter the last 4 digits of your phone and your birth year.
         </p>
 
         <form onSubmit={onSubmit} className="mt-8 flex flex-col gap-4">
-          <input value={phone} onChange={(e) => setPhone(e.target.value)} inputMode="numeric" placeholder="Last 4 digits of phone"
+          <input value={phone} onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 4))}
+            inputMode="numeric" maxLength={4} placeholder="Last 4 digits of phone"
             className="rounded border border-[var(--color-border)] bg-[var(--color-surface-2)] px-4 py-3 text-[var(--color-fg)] placeholder:text-[var(--color-fg-faint)] focus:border-[var(--color-volt)] focus:outline-none" />
-          <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="Email"
+          <input value={birthYear} onChange={(e) => setBirthYear(e.target.value.replace(/\D/g, '').slice(0, 4))}
+            inputMode="numeric" maxLength={4} placeholder="Birth year (e.g. 1995)"
             className="rounded border border-[var(--color-border)] bg-[var(--color-surface-2)] px-4 py-3 text-[var(--color-fg)] placeholder:text-[var(--color-fg-faint)] focus:border-[var(--color-volt)] focus:outline-none" />
-          <button type="submit" disabled={busy} className="btn-volt self-start disabled:opacity-50">
-            {busy ? 'Checking…' : 'Check my schedule'}
-          </button>
+          <div className="flex items-center gap-4">
+            <button type="submit" disabled={busy} className="btn-volt self-start disabled:opacity-50">
+              {busy ? 'Checking…' : 'Check my schedule'}
+            </button>
+            {(phone || birthYear || row) && (
+              <button type="button" onClick={clearSaved} className="text-xs text-[var(--color-fg-faint)] underline hover:text-[var(--color-fg)]">
+                Not you? Clear
+              </button>
+            )}
+          </div>
         </form>
 
         {error && <p className="mt-4 text-sm text-red-400">{error}</p>}
-        {notFound && <p className="mt-4 text-sm text-amber-400">We couldn't find your registration. Check your phone and email.</p>}
+        {notFound && <p className="mt-4 text-sm text-amber-400">We couldn't find your registration. Check your phone digits and birth year.</p>}
 
         {row && !row.group_label && (
           <div className="mt-8 rounded border border-[var(--color-border)] bg-[var(--color-surface-2)] p-6">
