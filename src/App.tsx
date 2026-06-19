@@ -243,7 +243,6 @@ export default function App() {
 
         <Divisions />
         <Schedule activeStage={activeStage} />
-        <MySchedule eventId={activeStage?.eventId ?? null} />
         <Venue activeStage={activeStage} />
       </main>
       <Footer />

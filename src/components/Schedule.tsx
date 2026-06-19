@@ -85,7 +85,7 @@ export function Schedule({ activeStage }: Props) {
           <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-fg-faint)]">
             Already registered?
           </p>
-          <a href="#my-schedule" className="btn-volt text-xs">
+          <a href="/my-schedule" className="btn-volt text-xs">
             My Start Time
           </a>
         </div>
