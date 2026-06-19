@@ -119,7 +119,7 @@ export function MySchedule({ eventId }: { eventId: string | null }) {
     <section id="my-schedule" className="border-t border-[var(--color-border)] px-6 py-20 md:px-12">
       <div className="mx-auto max-w-xl">
         <p className="eyebrow mb-2">Athletes</p>
-        <h2 className="font-display text-4xl text-[var(--color-fg)] md:text-5xl">My Schedule</h2>
+        <h2 className="font-display text-4xl text-[var(--color-fg)] md:text-5xl">My Start Time</h2>
         <p className="mt-3 text-sm text-[var(--color-fg-muted)] md:text-base">
           Check your group and approximate competition time. Enter the last 4 digits of your phone and your birth year.
         </p>

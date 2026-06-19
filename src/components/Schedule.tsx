@@ -86,7 +86,7 @@ export function Schedule({ activeStage }: Props) {
             Already registered?
           </p>
           <a href="#my-schedule" className="btn-volt text-xs">
-            Check your schedule
+            My Start Time
           </a>
         </div>
       </div>
