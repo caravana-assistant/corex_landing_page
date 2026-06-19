@@ -4,9 +4,9 @@ import { useState } from "react";
 // then run to the finish line. Source: Briefing_Stage03 / 2026-06-16 EventGuide.
 const sequence = [
   { type: "run", label: "200m Run" },
-  { type: "station", label: "60 Thrusters" },
-  { type: "run", label: "200m Run" },
   { type: "station", label: "500/400m Row" },
+  { type: "run", label: "200m Run" },
+  { type: "station", label: "60 Thrusters" },
   { type: "run", label: "200m Run" },
   { type: "station", label: "80m DB Farmers Carry" },
   { type: "run", label: "200m Run" },
@@ -15,7 +15,6 @@ const sequence = [
   { type: "station", label: "40m Sandbag Lunges" },
   { type: "run", label: "200m Run" },
   { type: "station", label: "500/400m Ski" },
-  { type: "run", label: "Run to Finish" },
 ] as const;
 
 const weights = [
@@ -24,13 +23,11 @@ const weights = [
   { division: "Double Men", dumbbell: "15kg", sandbag: "20kg", thruster: "7.5kg" },
   { division: "Double Women", dumbbell: "10kg", sandbag: "10kg", thruster: "5kg" },
   { division: "Relay", dumbbell: "15/10kg", sandbag: "20/10kg", thruster: "7.5/5kg" },
-  { division: "Junior Boys 14-17", dumbbell: "7.5kg", sandbag: "\u2014", thruster: "7.5kg" },
-  { division: "Junior Girls 14-17", dumbbell: "5kg", sandbag: "\u2014", thruster: "5kg" },
-  { division: "Youth Boys 11-13", dumbbell: "5kg", sandbag: "\u2014", thruster: "\u2014 (Goblet)" },
-  { division: "Youth Girls 11-13", dumbbell: "2kg", sandbag: "\u2014", thruster: "\u2014 (Goblet)" },
-  { division: "Kids 7-10", dumbbell: "\u2014", sandbag: "\u2014", thruster: "\u2014" },
-  { division: "POD Men", dumbbell: "\u2014", sandbag: "\u2014", thruster: "5kg" },
-  { division: "POD Women", dumbbell: "\u2014", sandbag: "\u2014", thruster: "5kg" },
+  { division: "Junior Boys 14-17", dumbbell: "6kg", sandbag: "-", thruster: "6kg" },
+  { division: "Junior Girls 14-17", dumbbell: "4kg", sandbag: "-", thruster: "4kg" },
+  { division: "Youth Boys 11-13", dumbbell: "-", sandbag: "-", thruster: "Goblet 4kg" },
+  { division: "Youth Girls 11-13", dumbbell: "-", sandbag: "-", thruster: "Goblet 2kg" },
+  { division: "Kids 7-10", dumbbell: "-", sandbag: "-", thruster: "-" },
 ] as const;
 
 /* Station icons — inline SVGs, no external deps */
