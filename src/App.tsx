@@ -64,7 +64,7 @@ export default function App() {
       <ScrollProgress />
       <Header stageLabel={activeSite.stage.label} stageTotal={activeSite.stage.total} registerHref={activeSite.cta.primary.href} />
       <main className="flex-1 pt-20">
-        <PhaseBanner phase={eventPhase} venue={activeStage?.venue} city={activeStage?.city} registerHref={activeSite.cta.primary.href} />
+        <PhaseBanner phase={eventPhase} venue={activeStage?.venue} city={activeStage?.city} registerHref={activeSite.cta.primary.href} targetISO={activeSite.event.dateISO} />
         {/* HERO */}
         <section
           id="top"
