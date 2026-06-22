@@ -124,7 +124,7 @@ export const stages: Stage[] = [
     dateShort: "27 JUN",
     venue: "ADNEC",
     city: "Al Ain",
-    timeWindow: "9:00 AM — 8:00 PM",
+    timeWindow: "8:00 AM — 8:00 PM",
     registerHref: "https://in.abudhabimarathon.events/core-x-stage-4--adnec-al-ain",
     photos: [],
     results: [],

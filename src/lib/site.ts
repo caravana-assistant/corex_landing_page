@@ -40,7 +40,7 @@ export const site = {
   cta: {
     primary: {
       label: "Register Now",
-      href: "https://in.abudhabimarathon.events/core-x-stage-3-al-dhanna",
+      href: "https://in.abudhabimarathon.events/core-x-stage-4--adnec-al-ain",
       external: true,
     },
     secondary: { label: "Watch Stage 1 Highlights", href: "#highlights" },
