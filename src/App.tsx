@@ -16,6 +16,8 @@ import { WhatsAppIcon } from "@/components/icons";
 import { useSelectedStage } from "@/lib/useSelectedStage";
 import { site, siteFromActiveStage } from "@/lib/site";
 import { useStageConfig } from "@/lib/useStageConfig";
+import { PhaseBanner } from "@/components/PhaseBanner";
+import { getEventPhase, phaseFromQuery } from "@/lib/eventPhase";
 
 export default function App() {
   const [selectedStage, selectStage] = useSelectedStage();
@@ -30,6 +32,13 @@ export default function App() {
   const activeSite = activeStage
     ? { ...site, ...siteFromActiveStage(activeStage) }
     : site;
+
+  // COR-169 P1: event phase (pre/eve/day/post) auto from current event date,
+  // overridable via ?phase= or stage_config.forced_phase.
+  const phaseOverride =
+    (typeof window !== "undefined" ? phaseFromQuery(window.location.search) : null) ??
+    activeStage?.forcedPhase ?? null;
+  const eventPhase = getEventPhase(activeStage?.date, Date.now(), phaseOverride);
 
   const isMySchedulePage =
     typeof window !== 'undefined' &&
@@ -55,6 +64,7 @@ export default function App() {
       <ScrollProgress />
       <Header stageLabel={activeSite.stage.label} stageTotal={activeSite.stage.total} registerHref={activeSite.cta.primary.href} />
       <main className="flex-1 pt-20">
+        <PhaseBanner phase={eventPhase} venue={activeStage?.venue} city={activeStage?.city} registerHref={activeSite.cta.primary.href} />
         {/* HERO */}
         <section
           id="top"

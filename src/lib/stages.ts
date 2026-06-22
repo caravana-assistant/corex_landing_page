@@ -35,6 +35,7 @@ export type Stage = {
   photos: GalleryPhoto[];
   eventId?: string;
   timeWindow?: string;
+  forcedPhase?: string | null;
   // Workout is opt-in per stage: the timeline + weights show ONLY when
   // workoutConfirmed is true (the content lives in Workout.tsx). Default/absent
   // = "Workout to be confirmed" — no stage inherits another stage's workout.
