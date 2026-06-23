@@ -9,8 +9,6 @@ import { ScrollProgress } from "@/components/ScrollProgress";
 import { MagneticButton } from "@/components/MagneticButton";
 import { Slogan } from "@/components/Slogan";
 import { Divisions } from "@/components/Divisions";
-import { Schedule } from "@/components/Schedule";
-import { Venue } from "@/components/Venue";
 import { MySchedule } from "@/components/MySchedule";
 import { WhatsAppIcon, MapPinIcon } from "@/components/icons";
 import { site, siteFromActiveStage } from "@/lib/site";
@@ -251,11 +249,7 @@ export default function App() {
 
         {/* STAGE: individual stage page */}
         {route.name === "stage" && stageForRoute && (
-          <>
-            <StageDetail stage={stageForRoute} onClose={() => navigate("/stages")} />
-            <Schedule activeStage={stageForRoute} />
-            <Venue activeStage={stageForRoute} />
-          </>
+          <StageDetail stage={stageForRoute} onClose={() => navigate("/stages")} />
         )}
         {route.name === "stage" && !stageForRoute && (
           <div className="mx-auto max-w-[1440px] px-5 py-32 text-center md:px-10">

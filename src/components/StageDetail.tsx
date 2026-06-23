@@ -1,7 +1,11 @@
+import { useState } from "react";
 import { PhotoGallery } from "@/components/PhotoGallery";
 import { Results } from "@/components/Results";
 import { Workout } from "@/components/Workout";
 import { Rulebook } from "@/components/Rulebook";
+import { Venue } from "@/components/Venue";
+import { Schedule } from "@/components/Schedule";
+import { MySchedule } from "@/components/MySchedule";
 import { WhatsAppIcon, MapPinIcon } from "@/components/icons";
 import type { Stage } from "@/lib/stages";
 import { site } from "@/lib/site";
@@ -11,12 +15,21 @@ type Props = {
   onClose?: () => void;
 };
 
+type TabKey = "rulebook" | "venue" | "results" | "photos" | "mycorex";
+const TABS: { key: TabKey; label: string }[] = [
+  { key: "rulebook", label: "Rulebook" },
+  { key: "venue", label: "Venue" },
+  { key: "results", label: "Results" },
+  { key: "photos", label: "Photos" },
+  { key: "mycorex", label: "My CoreX" },
+];
+
 export function StageDetail({ stage, onClose }: Props) {
+  const [tab, setTab] = useState<TabKey>(stage.status === "completed" ? "results" : "rulebook");
   return (
     <section
       id="stage-detail"
       className="relative border-b border-[var(--color-border)] bg-[var(--color-bg)]"
-      aria-live="polite"
     >
       {/* Stage hero strip */}
       <div className="relative overflow-hidden border-b border-[var(--color-border)]">
@@ -99,20 +112,64 @@ export function StageDetail({ stage, onClose }: Props) {
       </div>
 
       {/* Body — adapts per status */}
-      <div className="mx-auto max-w-[1440px] px-5 py-16 md:px-10 md:py-20">
-        {stage.status === "tbc" ? (
-          <TbcBody />
-        ) : stage.status === "postponed" ? (
-          <PostponedBody />
-        ) : (
-          <div className="space-y-20 md:space-y-28">
-            {stage.photos.length > 0 && <PhotoGallery stage={stage} />}
-            <Results stage={stage} />
-            <Workout confirmed={!!stage.workoutConfirmed} />
-            <Rulebook stage={stage} confirmed={!!(stage.rulebookPdf || stage.rulebookHref || stage.eventBriefingHref)} />
+      {stage.status === "tbc" ? (
+        <div className="mx-auto max-w-[1440px] px-5 py-16 md:px-10 md:py-20"><TbcBody /></div>
+      ) : stage.status === "postponed" ? (
+        <div className="mx-auto max-w-[1440px] px-5 py-16 md:px-10 md:py-20"><PostponedBody /></div>
+      ) : (
+        <>
+          {/* Tab bar */}
+          <div className="sticky top-16 z-30 border-b border-[var(--color-border)] bg-black/80 backdrop-blur-xl md:top-20">
+            <div
+              role="tablist"
+              aria-label="Stage sections"
+              className="mx-auto flex max-w-[1440px] gap-1 overflow-x-auto px-5 md:px-10"
+            >
+              {TABS.map((t) => {
+                const active = tab === t.key;
+                return (
+                  <button
+                    key={t.key}
+                    role="tab"
+                    aria-selected={active}
+                    onClick={() => setTab(t.key)}
+                    className={`shrink-0 border-b-2 px-4 py-4 font-display text-sm uppercase tracking-wide transition-colors ${
+                      active
+                        ? "border-[var(--color-volt)] text-[var(--color-volt)]"
+                        : "border-transparent text-[var(--color-fg-muted)] hover:text-[var(--color-fg)]"
+                    }`}
+                  >
+                    {t.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        )}
-      </div>
+
+          {/* Panels */}
+          <div className="mx-auto max-w-[1440px] px-5 py-12 md:px-10 md:py-16">
+            {tab === "rulebook" && (
+              <div className="space-y-16 md:space-y-20">
+                <Rulebook stage={stage} confirmed={!!(stage.rulebookPdf || stage.rulebookHref || stage.eventBriefingHref)} />
+                <Workout confirmed={!!stage.workoutConfirmed} />
+              </div>
+            )}
+            {tab === "venue" && (
+              <div className="space-y-16 md:space-y-20">
+                <Venue activeStage={stage} />
+                <Schedule activeStage={stage} />
+              </div>
+            )}
+            {tab === "results" && <Results stage={stage} />}
+            {tab === "photos" && (
+              stage.photos.length > 0
+                ? <PhotoGallery stage={stage} />
+                : <p className="py-16 text-center text-sm text-[var(--color-fg-muted)]">Photos will be posted here after the event.</p>
+            )}
+            {tab === "mycorex" && <MySchedule eventId={stage.eventId ?? null} />}
+          </div>
+        </>
+      )}
     </section>
   );
 }
