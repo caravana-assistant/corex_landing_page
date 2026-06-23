@@ -29,6 +29,7 @@ interface Row {
   wod_rule: string | null;
   wod_exercises: Exercise[] | null;
   display_id: string | null;
+  registration_code: string | null;
 }
 
 interface Exercise {
@@ -74,12 +75,14 @@ export function MySchedule({ eventId }: { eventId: string | null }) {
   const [error, setError] = useState<string | null>(null);
   // COR-172: QR of the athlete's ID — show it at the desk to be scanned (no typing).
   const [qrUrl, setQrUrl] = useState<string | null>(null);
+  // QR encodes the ADSC registration code (fallback to display_id) — what the desk scans.
+  const qrValue = row?.registration_code ?? row?.display_id ?? null;
   useEffect(() => {
-    if (!row?.display_id) { setQrUrl(null); return; }
-    QRCode.toDataURL(row.display_id, { width: 160, margin: 1, errorCorrectionLevel: 'M' })
+    if (!qrValue) { setQrUrl(null); return; }
+    QRCode.toDataURL(qrValue, { width: 160, margin: 1, errorCorrectionLevel: 'M' })
       .then(setQrUrl)
       .catch(() => setQrUrl(null));
-  }, [row?.display_id]);
+  }, [qrValue]);
 
   const doLookup = useCallback(async (last4: string, year: string) => {
     if (!eventId) { setError('No active event right now.'); return; }
@@ -162,8 +165,8 @@ export function MySchedule({ eventId }: { eventId: string | null }) {
               <p className="font-display text-2xl text-[var(--color-fg)]">{row.full_name}</p>
               {qrUrl && (
                 <div className="shrink-0 text-center">
-                  <img src={qrUrl} alt={`ID ${row.display_id}`} className="h-20 w-20 rounded bg-white p-1" />
-                  <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-faint)]">{row.display_id} · scan at desk</p>
+                  <img src={qrUrl} alt={`ID ${qrValue}`} className="h-20 w-20 rounded bg-white p-1" />
+                  <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-faint)]">{qrValue} · scan at desk</p>
                 </div>
               )}
             </div>
@@ -179,8 +182,8 @@ export function MySchedule({ eventId }: { eventId: string | null }) {
               <p className="font-display text-2xl text-[var(--color-fg)]">{row.full_name}</p>
               {qrUrl && (
                 <div className="shrink-0 text-center">
-                  <img src={qrUrl} alt={`ID ${row.display_id}`} className="h-20 w-20 rounded bg-white p-1" />
-                  <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-faint)]">{row.display_id} · scan at desk</p>
+                  <img src={qrUrl} alt={`ID ${qrValue}`} className="h-20 w-20 rounded bg-white p-1" />
+                  <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-faint)]">{qrValue} · scan at desk</p>
                 </div>
               )}
             </div>
