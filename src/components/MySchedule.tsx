@@ -161,8 +161,8 @@ export function MySchedule({ eventId }: { eventId: string | null }) {
             <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
               <dt className="text-[var(--color-fg-faint)]">Division</dt><dd className="text-[var(--color-fg)]">{DIVISION_LABELS[row.division] ?? row.division}</dd>
               <dt className="text-[var(--color-fg-faint)]">Group</dt><dd className="text-[var(--color-fg)]">{row.group_label ?? '—'}</dd>
-              <dt className="text-[var(--color-fg-faint)]">Check-in</dt><dd className="text-[var(--color-fg)]">{row.check_in_time ?? '—'}</dd>
-              <dt className="text-[var(--color-fg-faint)]">Competition (approx.)</dt><dd className="text-[var(--color-fg)]">{row.competition_time ?? '—'}</dd>
+              <dt className="text-[var(--color-fg-faint)]">Check-in</dt><dd className="text-[var(--color-fg)]">{row.check_in_time ? `From ${row.check_in_time}` : '—'}</dd>
+              <dt className="text-[var(--color-fg-faint)]">Competition (from)</dt><dd className="text-[var(--color-fg)]">{row.competition_time ? `From ${row.competition_time}` : '—'}</dd>
               <dt className="text-[var(--color-fg-faint)]">Heat</dt><dd className="text-[var(--color-fg)]">{row.heat_number ?? '—'}{row.heat_lane ? ` · lane ${row.heat_lane}` : ''}</dd>
               <dt className="text-[var(--color-fg-faint)]">Result</dt><dd className="text-[var(--color-fg)]">{fmtResult(row.result_time_seconds) ?? '—'}</dd>
             </dl>
