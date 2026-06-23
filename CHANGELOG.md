@@ -1,4 +1,24 @@
-# Changelog
+# Changelog — CoreX Landing (corexchallenge.ae)
+
+Repo `caravana-assistant/corex_landing_page` · branch `main`. Hash routing — F5 works on any route, no server rewrite config needed. Deploy = build + publish output.
+
+## 2026-06-23 — Multi-page + phase site + a11y
+
+### Architecture
+- **Multi-page (hash routing)** — single-scroll landing → individual pages: `#/` Index · `#/stages` · `#/stage/N` · `#/my-corex`. Top menu: Stages · My CoreX. Legacy `/my-schedule` → `#/my-corex`. (COR-163 P1)
+- **Stage page = tabs**: Rulebook · Venue · Results · Photos · My CoreX (sticky tab bar; My CoreX embedded per stage). (COR-163 P2a)
+
+### Phase-based site (COR-169)
+- Auto-switches by current event date (GST): pre (≤D-2) · eve (D-1, countdown) · day (D0, live) · post (D+1, results-first). Override: `?phase=eve|day|post` or `stage_config.forced_phase`.
+- Index gained **About** + **Results & Rankings** (links each completed stage to its Results tab). (P2b)
+
+### My CoreX
+- Check-in / competition shown as **"From HH:MM"** (not exact start). (COR-177)
+
+### Accessibility & design (COR-162)
+- WCAG AA contrast (`#767676` → `#9a9a9a`); `aria-label`s on My CoreX inputs; emoji → SVG/text; 44px touch targets; surfaces lifted off pure black; reduced-motion respected; countdown guards invalid date.
+
+---
 
 ## 2026-05-09 — Session #1
 
