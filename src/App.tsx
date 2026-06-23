@@ -12,7 +12,7 @@ import { Divisions } from "@/components/Divisions";
 import { Schedule } from "@/components/Schedule";
 import { Venue } from "@/components/Venue";
 import { MySchedule } from "@/components/MySchedule";
-import { WhatsAppIcon } from "@/components/icons";
+import { WhatsAppIcon, MapPinIcon } from "@/components/icons";
 import { useSelectedStage } from "@/lib/useSelectedStage";
 import { site, siteFromActiveStage } from "@/lib/site";
 import { useStageConfig } from "@/lib/useStageConfig";
@@ -156,7 +156,7 @@ export default function App() {
                   const hasMap = !!ev.mapsHref;
                   const inner = (
                     <>
-                      <span aria-hidden className="text-[var(--color-volt)]">📍</span>
+                      <MapPinIcon className="h-6 w-6 shrink-0 text-[var(--color-volt)]" />
                       <span className="font-display text-2xl leading-tight md:text-3xl">
                         {locationLabel}
                       </span>

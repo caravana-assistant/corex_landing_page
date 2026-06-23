@@ -2,7 +2,7 @@ import { PhotoGallery } from "@/components/PhotoGallery";
 import { Results } from "@/components/Results";
 import { Workout } from "@/components/Workout";
 import { Rulebook } from "@/components/Rulebook";
-import { WhatsAppIcon } from "@/components/icons";
+import { WhatsAppIcon, MapPinIcon } from "@/components/icons";
 import type { Stage } from "@/lib/stages";
 import { site } from "@/lib/site";
 
@@ -202,7 +202,7 @@ function StageActions({ stage }: { stage: Stage }) {
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border-strong)] px-5 py-2.5 font-display text-xs uppercase tracking-wide text-[var(--color-fg)] transition-colors hover:border-[var(--color-fg)] md:text-sm"
         >
-          <span aria-hidden className="text-[var(--color-volt)]">📍</span>
+          <MapPinIcon className="h-5 w-5 shrink-0 text-[var(--color-volt)]" />
           Open in Maps
           <span aria-hidden>↗</span>
         </a>

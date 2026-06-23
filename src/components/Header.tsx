@@ -70,7 +70,7 @@ export function Header({ stageLabel, stageTotal, registerHref }: { stageLabel?: 
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`Follow ${site.channels.instagram[0].handle} on Instagram`}
-              className="hidden sm:inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-border-strong)] text-[var(--color-fg-muted)] transition-colors hover:border-[var(--color-volt)] hover:text-[var(--color-volt)]"
+              className="hidden sm:inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--color-border-strong)] text-[var(--color-fg-muted)] transition-colors hover:border-[var(--color-volt)] hover:text-[var(--color-volt)]"
             >
               <InstagramIcon className="h-4 w-4" />
             </a>
@@ -102,7 +102,7 @@ export function Header({ stageLabel, stageTotal, registerHref }: { stageLabel?: 
               onClick={() => setMenuOpen(!menuOpen)}
               aria-label={menuOpen ? "Close menu" : "Open menu"}
               aria-expanded={menuOpen}
-              className="lg:hidden relative flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-border-strong)] text-[var(--color-fg-muted)] transition-colors hover:border-[var(--color-volt)] hover:text-[var(--color-volt)]"
+              className="lg:hidden relative flex h-11 w-11 items-center justify-center rounded-full border border-[var(--color-border-strong)] text-[var(--color-fg-muted)] transition-colors hover:border-[var(--color-volt)] hover:text-[var(--color-volt)]"
             >
               <span className="sr-only">{menuOpen ? "Close" : "Menu"}</span>
               <span

@@ -126,10 +126,10 @@ export function MySchedule({ eventId }: { eventId: string | null }) {
 
         <form onSubmit={onSubmit} className="mt-8 flex flex-col gap-4">
           <input value={phone} onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 4))}
-            inputMode="numeric" maxLength={4} placeholder="Last 4 digits of phone"
+            aria-label="Last 4 digits of phone" inputMode="numeric" maxLength={4} placeholder="Last 4 digits of phone"
             className="rounded border border-[var(--color-border)] bg-[var(--color-surface-2)] px-4 py-3 text-[var(--color-fg)] placeholder:text-[var(--color-fg-faint)] focus:border-[var(--color-volt)] focus:outline-none" />
           <input value={birthYear} onChange={(e) => setBirthYear(e.target.value.replace(/\D/g, '').slice(0, 4))}
-            inputMode="numeric" maxLength={4} placeholder="Birth year (e.g. 1995)"
+            aria-label="Birth year" inputMode="numeric" maxLength={4} placeholder="Birth year (e.g. 1995)"
             className="rounded border border-[var(--color-border)] bg-[var(--color-surface-2)] px-4 py-3 text-[var(--color-fg)] placeholder:text-[var(--color-fg-faint)] focus:border-[var(--color-volt)] focus:outline-none" />
           <div className="flex items-center gap-4">
             <button type="submit" disabled={busy} className="btn-volt self-start disabled:opacity-50">
