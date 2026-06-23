@@ -30,3 +30,4 @@ corex-stage2-deploy-*.zip
 *.sln
 *.sw?
 .vercel
+package-lock.json
