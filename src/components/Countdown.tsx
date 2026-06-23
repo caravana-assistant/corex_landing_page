@@ -13,13 +13,18 @@ function diff(target: Date): Parts {
 
 export function Countdown({ targetISO }: { targetISO: string }) {
   const target = new Date(targetISO);
+  const valid = !Number.isNaN(target.getTime());
   const [parts, setParts] = useState<Parts>(() => diff(target));
 
   useEffect(() => {
+    if (!valid) return;
     const t = window.setInterval(() => setParts(diff(target)), 1000);
     return () => window.clearInterval(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [targetISO]);
+
+  // Guard against an unset/invalid event date — don't render NaN cells.
+  if (!valid) return null;
 
   const cells: { value: number; label: string }[] = [
     { value: parts.days, label: "Days" },
