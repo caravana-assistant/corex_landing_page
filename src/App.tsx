@@ -16,6 +16,8 @@ import { useStageConfig } from "@/lib/useStageConfig";
 import { PhaseBanner } from "@/components/PhaseBanner";
 import { getEventPhase, phaseFromQuery } from "@/lib/eventPhase";
 import { useHashRoute, navigate } from "@/lib/useHashRoute";
+import { About } from "@/components/About";
+import { ResultsRankings } from "@/components/ResultsRankings";
 
 export default function App() {
   const { stages: dynamicStages, activeStage } = useStageConfig();
@@ -230,11 +232,13 @@ export default function App() {
         </section>
         )}
 
-        {/* INDEX: About + community + divisions + results/rankings */}
+        {/* INDEX: hero (above) + community + about + divisions + results/rankings */}
         {route.name === "index" && (
           <>
             <CommunityStrip />
+            <About />
             <Divisions />
+            <ResultsRankings stages={dynamicStages} />
           </>
         )}
 
