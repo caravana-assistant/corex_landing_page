@@ -28,7 +28,7 @@ export function Schedule({ activeStage }: Props) {
           <p className="mt-3 max-w-md text-sm text-[var(--color-fg-muted)] md:text-base">
             Enter the last 4 digits of your phone and your birth year to see your group, check-in and competition time.
           </p>
-          <a href="/my-schedule" className="btn-volt mt-7 text-sm">
+          <a href={`${import.meta.env.BASE_URL}my-schedule`} className="btn-volt mt-7 text-sm">
             My Start Time
           </a>
         </div>

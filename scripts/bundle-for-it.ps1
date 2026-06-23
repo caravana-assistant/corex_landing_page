@@ -20,16 +20,32 @@ if (-not (Test-Path $Deploy)) {
 }
 
 Write-Host "-> [1/4] Building production multi-file bundle..." -ForegroundColor Cyan
+$env:DEPLOY_TARGET = "aspnet"
 pnpm build
+
+# Create physical paths for my-schedule page in multi-file bundle
+Copy-Item (Join-Path $Dist "index.html") (Join-Path $Dist "my-schedule.html") -Force
+$DistMySchedule = Join-Path $Dist "my-schedule"
+if (-not (Test-Path $DistMySchedule)) {
+    New-Item -ItemType Directory -Path $DistMySchedule | Out-Null
+}
+Copy-Item (Join-Path $Dist "index.html") (Join-Path $DistMySchedule "index.html") -Force
 
 Write-Host "-> [2/4] Building self-contained single-file bundle..." -ForegroundColor Cyan
 $env:BUILD_SINGLE = "1"
 pnpm build
 $env:BUILD_SINGLE = $null
+$env:DEPLOY_TARGET = $null
 
 python scripts/inline-singlefile.py
 
 Copy-Item (Join-Path $DistSingle "corex-stage2-landing-single.html") $SingleHtml -Force
+Copy-Item $SingleHtml (Join-Path $Deploy "my-schedule.html") -Force
+$DeployMySchedule = Join-Path $Deploy "my-schedule"
+if (-not (Test-Path $DeployMySchedule)) {
+    New-Item -ItemType Directory -Path $DeployMySchedule | Out-Null
+}
+Copy-Item $SingleHtml (Join-Path $DeployMySchedule "index.html") -Force
 
 Write-Host "-> [3/4] Preparing multi-file zip..." -ForegroundColor Cyan
 Copy-Item (Join-Path $Root "DEPLOY-FOR-IT.md") $Dist -Force

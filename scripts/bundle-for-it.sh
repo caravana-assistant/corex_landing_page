@@ -19,12 +19,18 @@ cd "$ROOT"
 mkdir -p "$DEPLOY"
 
 echo "→ [1/4] Building production multi-file bundle…"
-pnpm build
+DEPLOY_TARGET=aspnet pnpm build
+cp "$DIST/index.html" "$DIST/my-schedule.html"
+mkdir -p "$DIST/my-schedule"
+cp "$DIST/index.html" "$DIST/my-schedule/index.html"
 
 echo "→ [2/4] Building self-contained single-file bundle…"
-BUILD_SINGLE=1 pnpm build
+DEPLOY_TARGET=aspnet BUILD_SINGLE=1 pnpm build
 python3 scripts/inline-singlefile.py
 cp "$DIST_SINGLE/corex-stage2-landing-single.html" "$SINGLE_HTML"
+cp "$SINGLE_HTML" "$DEPLOY/my-schedule.html"
+mkdir -p "$DEPLOY/my-schedule"
+cp "$SINGLE_HTML" "$DEPLOY/my-schedule/index.html"
 
 echo "→ [3/4] Preparing multi-file zip…"
 cp "$ROOT/DEPLOY-FOR-IT.md" "$DIST/" 2>/dev/null || true

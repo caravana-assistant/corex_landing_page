@@ -2,6 +2,11 @@ import { site } from "@/lib/site";
 import { InstagramIcon, WhatsAppIcon } from "@/components/icons";
 
 export function Footer() {
+  const isMySchedulePage =
+    typeof window !== 'undefined' &&
+    (window.location.pathname.replace(/\/+$/, '').endsWith('/my-schedule') ||
+     window.location.pathname.endsWith('/my-schedule.html'));
+
   return (
     <footer className="relative border-t border-[var(--color-border)] bg-[var(--color-bg)]">
       <div className="overflow-hidden border-b border-[var(--color-border)] py-6 md:py-10" aria-hidden="true">
@@ -100,13 +105,16 @@ export function Footer() {
         <div className="md:col-span-3">
           <p className="eyebrow">Navigate</p>
           <ul className="mt-4 space-y-3 text-base">
-            {site.nav.map((item) => (
-              <li key={item.href}>
-                <a href={item.href} className="link-uline">
-                  {item.label}
-                </a>
-              </li>
-            ))}
+            {site.nav.map((item) => {
+              const href = isMySchedulePage ? `${import.meta.env.BASE_URL}${item.href}` : item.href;
+              return (
+                <li key={item.href}>
+                  <a href={href} className="link-uline">
+                    {item.label}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         </div>
 

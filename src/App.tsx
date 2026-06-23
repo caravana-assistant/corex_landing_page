@@ -33,7 +33,8 @@ export default function App() {
 
   const isMySchedulePage =
     typeof window !== 'undefined' &&
-    window.location.pathname.replace(/\/+$/, '') === '/my-schedule';
+    (window.location.pathname.replace(/\/+$/, '').endsWith('/my-schedule') ||
+     window.location.pathname.endsWith('/my-schedule.html'));
 
   if (isMySchedulePage) {
     return (
