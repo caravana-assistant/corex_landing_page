@@ -193,7 +193,8 @@ export function MySchedule({ eventId }: { eventId: string | null }) {
               <dt className="text-[var(--color-fg-faint)]">Result</dt><dd className="text-[var(--color-fg)]">{fmtResult(row.result_time_seconds) ?? '—'}</dd>
             </dl>
             <WorkoutBlock row={row} />
-            <p className="mt-4 text-xs text-[var(--color-fg-faint)]">Times are approximate and may change — follow the CoreX WhatsApp group and socials.</p>
+            <p className="mt-4 text-sm font-semibold text-[var(--color-volt)]">Please arrive 1 hour before your start time.</p>
+            <p className="mt-2 text-xs text-[var(--color-fg-faint)]">Times are approximate and may change — follow the CoreX WhatsApp group and socials.</p>
           </div>
         )}
       </div>
