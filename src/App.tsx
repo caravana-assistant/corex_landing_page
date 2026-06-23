@@ -13,20 +13,14 @@ import { Schedule } from "@/components/Schedule";
 import { Venue } from "@/components/Venue";
 import { MySchedule } from "@/components/MySchedule";
 import { WhatsAppIcon, MapPinIcon } from "@/components/icons";
-import { useSelectedStage } from "@/lib/useSelectedStage";
 import { site, siteFromActiveStage } from "@/lib/site";
 import { useStageConfig } from "@/lib/useStageConfig";
 import { PhaseBanner } from "@/components/PhaseBanner";
 import { getEventPhase, phaseFromQuery } from "@/lib/eventPhase";
+import { useHashRoute, navigate } from "@/lib/useHashRoute";
 
 export default function App() {
-  const [selectedStage, selectStage] = useSelectedStage();
   const { stages: dynamicStages, activeStage } = useStageConfig();
-
-  // Resolve selected stage from dynamic data so StageDetail gets overrides
-  const resolvedSelected = selectedStage
-    ? dynamicStages.find((s) => s.number === selectedStage.number) ?? selectedStage
-    : null;
 
   // Merge site defaults with active stage overrides (falls back to static site if no active stage)
   const activeSite = activeStage
@@ -40,11 +34,15 @@ export default function App() {
     activeStage?.forcedPhase ?? null;
   const eventPhase = getEventPhase(activeStage?.date, Date.now(), phaseOverride);
 
-  const isMySchedulePage =
-    typeof window !== 'undefined' &&
-    window.location.pathname.replace(/\/+$/, '') === '/my-schedule';
+  // COR-163: multi-page hash routing (index / stages / stage/:n / my-corex).
+  const route = useHashRoute();
+  // Legacy /my-schedule path → redirect to the hash route.
+  if (typeof window !== 'undefined' && window.location.pathname.replace(/\/+$/, '') === '/my-schedule' && !window.location.hash) {
+    window.location.replace('/#/my-corex');
+  }
+  const stageForRoute = route.name === 'stage' ? (dynamicStages.find((s) => s.number === route.n) ?? null) : null;
 
-  if (isMySchedulePage) {
+  if (route.name === 'my-corex') {
     return (
       <ErrorBoundary>
         <div className="flex min-h-screen flex-col bg-[var(--color-bg)] text-[var(--color-fg)]">
@@ -65,7 +63,8 @@ export default function App() {
       <Header stageLabel={activeSite.stage.label} stageTotal={activeSite.stage.total} registerHref={activeSite.cta.primary.href} />
       <main className="flex-1 pt-20">
         <PhaseBanner phase={eventPhase} venue={activeStage?.venue} city={activeStage?.city} registerHref={activeSite.cta.primary.href} targetISO={activeSite.event.dateISO} recap={activeStage?.recap} />
-        {/* HERO */}
+        {/* HERO — index page only */}
+        {route.name === "index" && (
         <section
           id="top"
           className="grain relative isolate flex min-h-[calc(100vh-5rem)] flex-col overflow-hidden border-b border-[var(--color-border)]"
@@ -203,16 +202,18 @@ export default function App() {
                     {activeSite.cta.primary.label}
                     <span aria-hidden>→</span>
                   </MagneticButton>
-                  <a
-                    href={site.channels.whatsapp.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-ghost justify-center gap-2"
-                  >
-                    <WhatsAppIcon className="h-4 w-4 text-[var(--color-volt)]" />
-                    Join WhatsApp
-                  </a>
+                  <a href="#/my-corex" className="btn-ghost justify-center">My CoreX</a>
+                  <a href="#/stages" className="btn-ghost justify-center">Stages</a>
                 </div>
+                <a
+                  href={site.channels.whatsapp.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm text-[var(--color-fg-muted)] transition-colors hover:text-[var(--color-volt)] md:self-end"
+                >
+                  <WhatsAppIcon className="h-4 w-4 text-[var(--color-volt)]" />
+                  Join WhatsApp
+                </a>
               </div>
             </div>
           </div>
@@ -229,31 +230,39 @@ export default function App() {
             </div>
           </div>
         </section>
+        )}
 
-        <SeasonGrid
-          stages={dynamicStages}
-          selected={resolvedSelected?.number ?? null}
-          onSelect={(n) => {
-            selectStage(n);
-            // Smooth-scroll to the detail block after state updates
-            requestAnimationFrame(() => {
-              document
-                .getElementById("stage-detail")
-                ?.scrollIntoView({ behavior: "smooth", block: "start" });
-            });
-          }}
-        />
-        {resolvedSelected && (
-          <StageDetail
-            stage={resolvedSelected}
-            onClose={() => selectStage(null)}
+        {/* INDEX: About + community + divisions + results/rankings */}
+        {route.name === "index" && (
+          <>
+            <CommunityStrip />
+            <Divisions />
+          </>
+        )}
+
+        {/* STAGES: full season grid → click navigates to the stage page */}
+        {route.name === "stages" && (
+          <SeasonGrid
+            stages={dynamicStages}
+            selected={null}
+            onSelect={(n) => navigate(`/stage/${n}`)}
           />
         )}
-        <CommunityStrip />
 
-        <Divisions />
-        <Schedule activeStage={activeStage} />
-        <Venue activeStage={activeStage} />
+        {/* STAGE: individual stage page */}
+        {route.name === "stage" && stageForRoute && (
+          <>
+            <StageDetail stage={stageForRoute} onClose={() => navigate("/stages")} />
+            <Schedule activeStage={stageForRoute} />
+            <Venue activeStage={stageForRoute} />
+          </>
+        )}
+        {route.name === "stage" && !stageForRoute && (
+          <div className="mx-auto max-w-[1440px] px-5 py-32 text-center md:px-10">
+            <p className="font-display text-2xl text-[var(--color-fg-muted)]">Stage not found.</p>
+            <button onClick={() => navigate("/stages")} className="btn-volt mt-6">View all stages</button>
+          </div>
+        )}
       </main>
       <Footer />
     </div>

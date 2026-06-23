@@ -1,12 +1,16 @@
 import { useState, useEffect } from "react";
 import { site } from "@/lib/site";
 import { InstagramIcon } from "@/components/icons";
-import { useActiveSection } from "@/lib/useActiveSection";
+import { useHashRoute } from "@/lib/useHashRoute";
 
-const NAV_IDS = site.nav.map((n) => n.href.replace("#", ""));
+// COR-163: top menu is route-based (multi-page), not scroll anchors.
+const NAV = [
+  { label: "Stages", href: "#/stages", match: "stages" },
+  { label: "My CoreX", href: "#/my-corex", match: "my-corex" },
+];
 
 export function Header({ stageLabel, stageTotal, registerHref }: { stageLabel?: string; stageTotal?: number; registerHref?: string }) {
-  const active = useActiveSection(NAV_IDS);
+  const route = useHashRoute();
   const [menuOpen, setMenuOpen] = useState(false);
 
   // Lock body scroll when drawer is open
@@ -30,7 +34,7 @@ export function Header({ stageLabel, stageTotal, registerHref }: { stageLabel?: 
       <header className="fixed inset-x-0 top-0 z-50 border-b border-[var(--color-border)] bg-black/75 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-5 md:h-20 md:px-10">
           <a
-            href="#top"
+            href="#/"
             aria-label="CoreX Home"
             className="flex items-center gap-3"
           >
@@ -46,8 +50,8 @@ export function Header({ stageLabel, stageTotal, registerHref }: { stageLabel?: 
 
           {/* Desktop nav */}
           <nav className="hidden lg:flex items-center gap-8">
-            {site.nav.map((item) => {
-              const isActive = active === item.href.replace("#", "");
+            {NAV.map((item) => {
+              const isActive = route.name === item.match;
               return (
                 <a
                   key={item.href}
@@ -149,8 +153,8 @@ export function Header({ stageLabel, stageTotal, registerHref }: { stageLabel?: 
           }`}
         >
           <ul className="flex flex-col gap-1">
-            {site.nav.map((item, i) => {
-              const isActive = active === item.href.replace("#", "");
+            {NAV.map((item, i) => {
+              const isActive = route.name === item.match;
               return (
                 <li
                   key={item.href}
