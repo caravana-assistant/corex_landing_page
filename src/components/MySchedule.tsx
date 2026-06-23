@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import QRCode from 'qrcode';
 import { supabase } from '@/lib/supabase';
 
 const LS_PHONE = 'corex.myschedule.phone4';
@@ -27,6 +28,7 @@ interface Row {
   wod_time_cap: number | null;
   wod_rule: string | null;
   wod_exercises: Exercise[] | null;
+  display_id: string | null;
 }
 
 interface Exercise {
@@ -70,6 +72,14 @@ export function MySchedule({ eventId }: { eventId: string | null }) {
   const [row, setRow] = useState<Row | null>(null);
   const [notFound, setNotFound] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // COR-172: QR of the athlete's ID — show it at the desk to be scanned (no typing).
+  const [qrUrl, setQrUrl] = useState<string | null>(null);
+  useEffect(() => {
+    if (!row?.display_id) { setQrUrl(null); return; }
+    QRCode.toDataURL(row.display_id, { width: 160, margin: 1, errorCorrectionLevel: 'M' })
+      .then(setQrUrl)
+      .catch(() => setQrUrl(null));
+  }, [row?.display_id]);
 
   const doLookup = useCallback(async (last4: string, year: string) => {
     if (!eventId) { setError('No active event right now.'); return; }
@@ -148,7 +158,15 @@ export function MySchedule({ eventId }: { eventId: string | null }) {
 
         {row && !row.group_label && (
           <div className="mt-8 rounded border border-[var(--color-border)] bg-[var(--color-surface-2)] p-6">
-            <p className="font-display text-2xl text-[var(--color-fg)]">{row.full_name}</p>
+            <div className="flex items-start justify-between gap-4">
+              <p className="font-display text-2xl text-[var(--color-fg)]">{row.full_name}</p>
+              {qrUrl && (
+                <div className="shrink-0 text-center">
+                  <img src={qrUrl} alt={`ID ${row.display_id}`} className="h-20 w-20 rounded bg-white p-1" />
+                  <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-faint)]">{row.display_id} · scan at desk</p>
+                </div>
+              )}
+            </div>
             <p className="mt-2 text-sm text-[var(--color-fg)]">Division: {DIVISION_LABELS[row.division] ?? row.division}</p>
             <p className="mt-4 text-[var(--color-volt)]">Grouping not published yet — please check back later.</p>
             <WorkoutBlock row={row} />
@@ -157,7 +175,15 @@ export function MySchedule({ eventId }: { eventId: string | null }) {
 
         {row && row.group_label && (
           <div className="mt-8 rounded border border-[var(--color-border)] bg-[var(--color-surface-2)] p-6">
-            <p className="font-display text-2xl text-[var(--color-fg)]">{row.full_name}</p>
+            <div className="flex items-start justify-between gap-4">
+              <p className="font-display text-2xl text-[var(--color-fg)]">{row.full_name}</p>
+              {qrUrl && (
+                <div className="shrink-0 text-center">
+                  <img src={qrUrl} alt={`ID ${row.display_id}`} className="h-20 w-20 rounded bg-white p-1" />
+                  <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-faint)]">{row.display_id} · scan at desk</p>
+                </div>
+              )}
+            </div>
             <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
               <dt className="text-[var(--color-fg-faint)]">Division</dt><dd className="text-[var(--color-fg)]">{DIVISION_LABELS[row.division] ?? row.division}</dd>
               <dt className="text-[var(--color-fg-faint)]">Group</dt><dd className="text-[var(--color-fg)]">{row.group_label ?? '—'}</dd>
