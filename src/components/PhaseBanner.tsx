@@ -8,17 +8,17 @@ interface Props {
   registerHref?: string;
   /** ISO of the event start — used for the EVE countdown (P2). */
   targetISO?: string;
+  /** Post-event recap stats (P3). */
+  recap?: { athletes: number; divisions: number; lanes?: number };
 }
 
 // COR-169 P1: a top strip that auto-switches by event phase (pre/eve/day/post).
 // Reuses current data (register link, venue, My CoreX); dedicated per-phase
 // pages/visuals are P2. Hidden in the default PRE phase (the hero already covers it).
-export function PhaseBanner({ phase, venue, city, registerHref, targetISO }: Props) {
+export function PhaseBanner({ phase, venue, city, registerHref, targetISO, recap }: Props) {
   if (phase === "pre") return null;
 
   const place = [venue, city].filter(Boolean).join(", ");
-  const base =
-    "relative z-20 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 px-5 py-2.5 text-center text-sm font-medium";
 
   // EVE (D-1): dedicated block — countdown + check-in card (P2).
   if (phase === "eve") {
@@ -63,15 +63,39 @@ export function PhaseBanner({ phase, venue, city, registerHref, targetISO }: Pro
     );
   }
 
-  // post
+  // POST (D+1…): dedicated results-first block (P3).
   return (
-    <div className={`${base} border-b border-sky-500/40 bg-sky-500/10 text-sky-100`}>
-      <span className="font-display tracking-wide text-sky-300">RESULTS ARE IN</span>
-      <span className="text-sky-100/90">See how it went and what's next.</span>
-      <a href="/my-schedule" className="rounded border border-sky-400/60 bg-sky-400/10 px-2 py-0.5 font-semibold text-sky-200 hover:bg-sky-400/20">My CoreX</a>
-      {registerHref && (
-        <a href={registerHref} className="rounded border border-neutral-500/50 px-2 py-0.5 text-neutral-200 hover:bg-white/5">Next stage</a>
-      )}
+    <section className="relative z-20 border-b border-sky-500/40 bg-gradient-to-b from-sky-500/15 to-transparent px-5 py-8">
+      <div className="mx-auto flex max-w-[1100px] flex-col items-center gap-5 text-center">
+        <span className="font-display text-2xl tracking-wide text-sky-300 md:text-3xl">
+          RESULTS ARE IN{place ? ` · ${place}` : ""}
+        </span>
+        {recap && (
+          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2">
+            <Stat value={recap.athletes} label="Athletes" />
+            <Stat value={recap.divisions} label="Divisions" />
+            {recap.lanes != null && <Stat value={recap.lanes} label="Lanes" />}
+          </div>
+        )}
+        <p className="max-w-2xl text-sm text-sky-100/90 md:text-base">
+          Check your time and placement, then lock in for the next stage.
+        </p>
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          <a href="/my-schedule" className="rounded-md border border-sky-400/60 bg-sky-400/15 px-4 py-2 font-semibold text-sky-100 hover:bg-sky-400/25">See your results →</a>
+          {registerHref && (
+            <a href={registerHref} className="rounded-md border border-neutral-500/50 px-4 py-2 font-semibold text-neutral-200 hover:bg-white/5">Next stage</a>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Stat({ value, label }: { value: number; label: string }) {
+  return (
+    <div className="flex flex-col items-center">
+      <span className="font-display text-4xl tabular-nums leading-none text-sky-200 md:text-5xl">{value}</span>
+      <span className="mt-1 text-xs uppercase tracking-widest text-sky-300/70">{label}</span>
     </div>
   );
 }
