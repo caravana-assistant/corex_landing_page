@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import QRCode from 'qrcode';
 import { supabase } from '@/lib/supabase';
 
 const LS_PHONE = 'corex.myschedule.phone4';
@@ -27,6 +28,8 @@ interface Row {
   wod_time_cap: number | null;
   wod_rule: string | null;
   wod_exercises: Exercise[] | null;
+  display_id: string | null;
+  registration_code: string | null;
 }
 
 interface Exercise {
@@ -70,6 +73,16 @@ export function MySchedule({ eventId }: { eventId: string | null }) {
   const [row, setRow] = useState<Row | null>(null);
   const [notFound, setNotFound] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // COR-172: QR of the athlete's ID — show it at the desk to be scanned (no typing).
+  const [qrUrl, setQrUrl] = useState<string | null>(null);
+  // QR encodes the ADSC registration code (fallback to display_id) — what the desk scans.
+  const qrValue = row?.registration_code ?? row?.display_id ?? null;
+  useEffect(() => {
+    if (!qrValue) { setQrUrl(null); return; }
+    QRCode.toDataURL(qrValue, { width: 160, margin: 1, errorCorrectionLevel: 'M' })
+      .then(setQrUrl)
+      .catch(() => setQrUrl(null));
+  }, [qrValue]);
 
   const doLookup = useCallback(async (last4: string, year: string) => {
     if (!eventId) { setError('No active event right now.'); return; }
@@ -126,10 +139,10 @@ export function MySchedule({ eventId }: { eventId: string | null }) {
 
         <form onSubmit={onSubmit} className="mt-8 flex flex-col gap-4">
           <input value={phone} onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 4))}
-            inputMode="numeric" maxLength={4} placeholder="Last 4 digits of phone"
+            aria-label="Last 4 digits of phone" inputMode="numeric" maxLength={4} placeholder="Last 4 digits of phone"
             className="rounded border border-[var(--color-border)] bg-[var(--color-surface-2)] px-4 py-3 text-[var(--color-fg)] placeholder:text-[var(--color-fg-faint)] focus:border-[var(--color-volt)] focus:outline-none" />
           <input value={birthYear} onChange={(e) => setBirthYear(e.target.value.replace(/\D/g, '').slice(0, 4))}
-            inputMode="numeric" maxLength={4} placeholder="Birth year (e.g. 1995)"
+            aria-label="Birth year" inputMode="numeric" maxLength={4} placeholder="Birth year (e.g. 1995)"
             className="rounded border border-[var(--color-border)] bg-[var(--color-surface-2)] px-4 py-3 text-[var(--color-fg)] placeholder:text-[var(--color-fg-faint)] focus:border-[var(--color-volt)] focus:outline-none" />
           <div className="flex items-center gap-4">
             <button type="submit" disabled={busy} className="btn-volt self-start disabled:opacity-50">
@@ -148,7 +161,15 @@ export function MySchedule({ eventId }: { eventId: string | null }) {
 
         {row && !row.group_label && (
           <div className="mt-8 rounded border border-[var(--color-border)] bg-[var(--color-surface-2)] p-6">
-            <p className="font-display text-2xl text-[var(--color-fg)]">{row.full_name}</p>
+            <div className="flex items-start justify-between gap-4">
+              <p className="font-display text-2xl text-[var(--color-fg)]">{row.full_name}</p>
+              {qrUrl && (
+                <div className="shrink-0 text-center">
+                  <img src={qrUrl} alt={`ID ${qrValue}`} className="h-20 w-20 rounded bg-white p-1" />
+                  <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-faint)]">{qrValue} · scan at desk</p>
+                </div>
+              )}
+            </div>
             <p className="mt-2 text-sm text-[var(--color-fg)]">Division: {DIVISION_LABELS[row.division] ?? row.division}</p>
             <p className="mt-4 text-[var(--color-volt)]">Grouping not published yet — please check back later.</p>
             <WorkoutBlock row={row} />
@@ -157,17 +178,26 @@ export function MySchedule({ eventId }: { eventId: string | null }) {
 
         {row && row.group_label && (
           <div className="mt-8 rounded border border-[var(--color-border)] bg-[var(--color-surface-2)] p-6">
-            <p className="font-display text-2xl text-[var(--color-fg)]">{row.full_name}</p>
+            <div className="flex items-start justify-between gap-4">
+              <p className="font-display text-2xl text-[var(--color-fg)]">{row.full_name}</p>
+              {qrUrl && (
+                <div className="shrink-0 text-center">
+                  <img src={qrUrl} alt={`ID ${qrValue}`} className="h-20 w-20 rounded bg-white p-1" />
+                  <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-[var(--color-fg-faint)]">{qrValue} · scan at desk</p>
+                </div>
+              )}
+            </div>
             <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
               <dt className="text-[var(--color-fg-faint)]">Division</dt><dd className="text-[var(--color-fg)]">{DIVISION_LABELS[row.division] ?? row.division}</dd>
               <dt className="text-[var(--color-fg-faint)]">Group</dt><dd className="text-[var(--color-fg)]">{row.group_label ?? '—'}</dd>
-              <dt className="text-[var(--color-fg-faint)]">Check-in</dt><dd className="text-[var(--color-fg)]">{row.check_in_time ?? '—'}</dd>
-              <dt className="text-[var(--color-fg-faint)]">Competition (approx.)</dt><dd className="text-[var(--color-fg)]">{row.competition_time ?? '—'}</dd>
+              <dt className="text-[var(--color-fg-faint)]">Check-in</dt><dd className="text-[var(--color-fg)]">{row.check_in_time ? `From ${row.check_in_time}` : '—'}</dd>
+              <dt className="text-[var(--color-fg-faint)]">Competition (from)</dt><dd className="text-[var(--color-fg)]">{row.competition_time ? `From ${row.competition_time}` : '—'}</dd>
               <dt className="text-[var(--color-fg-faint)]">Heat</dt><dd className="text-[var(--color-fg)]">{row.heat_number ?? '—'}{row.heat_lane ? ` · lane ${row.heat_lane}` : ''}</dd>
               <dt className="text-[var(--color-fg-faint)]">Result</dt><dd className="text-[var(--color-fg)]">{fmtResult(row.result_time_seconds) ?? '—'}</dd>
             </dl>
             <WorkoutBlock row={row} />
-            <p className="mt-4 text-xs text-[var(--color-fg-faint)]">Times are approximate and may change — follow the CoreX WhatsApp group and socials.</p>
+            <p className="mt-4 text-sm font-semibold text-[var(--color-volt)]">Please arrive 1 hour before your start time.</p>
+            <p className="mt-2 text-xs text-[var(--color-fg-faint)]">Times are approximate and may change — follow the CoreX WhatsApp group and socials.</p>
           </div>
         )}
       </div>

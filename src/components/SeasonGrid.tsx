@@ -243,7 +243,7 @@ function toneFor(status: StageStatus): {
       return {
         cardClass:
           "border-red-900/40 bg-red-950/20 opacity-70 hover:opacity-90 hover:border-red-700/50",
-        statusLabel: "Cooking 🔥",
+        statusLabel: "Coming soon",
         statusClass:
           "border-red-800/60 text-red-400 animate-pulse",
         numberClass: "text-red-900/50",

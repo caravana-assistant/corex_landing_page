@@ -20,6 +20,7 @@ interface StageConfigRow {
   recap_athletes: number | null;
   recap_divisions: number | null;
   recap_lanes: number | null;
+  forced_phase: string | null;
 }
 
 // Static fallback for first paint: pre-select the current stage so the hero
@@ -68,6 +69,7 @@ export function useStageConfig(): {
           mapsHref: cfg.maps_href ?? s.mapsHref,
           registerHref: cfg.register_href ?? s.registerHref,
           eventId: cfg.event_id ?? s.eventId,
+          forcedPhase: cfg.forced_phase ?? null,
           timeWindow: cfg.time_window ?? s.timeWindow,
           rulebookHref: cfg.rulebook_href ?? s.rulebookHref,
           eventBriefingHref: cfg.event_briefing_href ?? s.eventBriefingHref,

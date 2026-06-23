@@ -1,4 +1,5 @@
 import type { Stage } from "@/lib/stages";
+import { MapPinIcon } from "@/components/icons";
 
 const checklist = [
   "Emirates ID or Passport",
@@ -87,7 +88,7 @@ export function Venue({ activeStage }: Props) {
                 rel="noopener noreferrer"
                 className="btn-ghost mt-8 inline-flex gap-2"
               >
-                <span aria-hidden className="text-[var(--color-volt)]">📍</span>
+                <MapPinIcon className="h-5 w-5 shrink-0 text-[var(--color-volt)]" />
                 Open in Maps
                 <span aria-hidden className="text-sm text-[var(--color-volt)]">↗</span>
               </a>

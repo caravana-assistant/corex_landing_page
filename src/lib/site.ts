@@ -37,10 +37,23 @@ export const site = {
     communitySubhead:
       "Your road to Hyrox starts here. Built for athletes, made for the community.",
   },
+  about: {
+    title: "What is the CoreX Fitness League?",
+    paragraphs: [
+      "CoreX is an 8-stage functional fitness league across the season, powered by the Abu Dhabi Sports Council. Each stage is a for-time workout — run, row, ski, carries, thrusters and more — scored on the clock with penalties for missed reps.",
+      "It's built for everyone: 14 divisions from Kids and Youth to Open, Pro, Doubles and Relays. Spectators are free and families are welcome — your road to Hyrox starts here.",
+    ],
+    stats: [
+      { value: "8", label: "Stages / season" },
+      { value: "14", label: "Divisions" },
+      { value: "For time", label: "Format" },
+      { value: "Free", label: "For spectators" },
+    ],
+  },
   cta: {
     primary: {
       label: "Register Now",
-      href: "https://in.abudhabimarathon.events/core-x-stage-3-al-dhanna",
+      href: "https://in.abudhabimarathon.events/core-x-stage-4--adnec-al-ain",
       external: true,
     },
     secondary: { label: "Watch Stage 1 Highlights", href: "#highlights" },

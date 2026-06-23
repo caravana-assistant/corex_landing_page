@@ -35,6 +35,7 @@ export type Stage = {
   photos: GalleryPhoto[];
   eventId?: string;
   timeWindow?: string;
+  forcedPhase?: string | null;
   // Workout is opt-in per stage: the timeline + weights show ONLY when
   // workoutConfirmed is true (the content lives in Workout.tsx). Default/absent
   // = "Workout to be confirmed" — no stage inherits another stage's workout.
@@ -124,7 +125,7 @@ export const stages: Stage[] = [
     dateShort: "27 JUN",
     venue: "ADNEC",
     city: "Al Ain",
-    timeWindow: "9:00 AM — 8:00 PM",
+    timeWindow: "8:00 AM — 8:00 PM",
     registerHref: "https://in.abudhabimarathon.events/core-x-stage-4--adnec-al-ain",
     photos: [],
     results: [],

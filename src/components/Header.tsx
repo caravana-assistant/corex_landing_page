@@ -1,17 +1,17 @@
 import { useState, useEffect } from "react";
 import { site } from "@/lib/site";
 import { InstagramIcon } from "@/components/icons";
-import { useActiveSection } from "@/lib/useActiveSection";
+import { useHashRoute } from "@/lib/useHashRoute";
 
-const NAV_IDS = site.nav.map((n) => n.href.replace("#", ""));
+// COR-163: top menu is route-based (multi-page), not scroll anchors.
+const NAV = [
+  { label: "Stages", href: "#/stages", match: "stages" },
+  { label: "My CoreX", href: "#/my-corex", match: "my-corex" },
+];
 
 export function Header({ stageLabel, stageTotal, registerHref }: { stageLabel?: string; stageTotal?: number; registerHref?: string }) {
-  const active = useActiveSection(NAV_IDS);
+  const route = useHashRoute();
   const [menuOpen, setMenuOpen] = useState(false);
-  const isMySchedulePage =
-    typeof window !== 'undefined' &&
-    (window.location.pathname.replace(/\/+$/, '').endsWith('/my-schedule') ||
-     window.location.pathname.endsWith('/my-schedule.html'));
 
   // Lock body scroll when drawer is open
   useEffect(() => {
@@ -34,7 +34,7 @@ export function Header({ stageLabel, stageTotal, registerHref }: { stageLabel?: 
       <header className="fixed inset-x-0 top-0 z-50 border-b border-[var(--color-border)] bg-black/75 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-5 md:h-20 md:px-10">
           <a
-            href={isMySchedulePage ? import.meta.env.BASE_URL : "#top"}
+            href="#/"
             aria-label="CoreX Home"
             className="flex items-center gap-3"
           >
@@ -50,13 +50,12 @@ export function Header({ stageLabel, stageTotal, registerHref }: { stageLabel?: 
 
           {/* Desktop nav */}
           <nav className="hidden lg:flex items-center gap-8">
-            {site.nav.map((item) => {
-              const isActive = active === item.href.replace("#", "");
-              const href = isMySchedulePage ? `${import.meta.env.BASE_URL}${item.href}` : item.href;
+            {NAV.map((item) => {
+              const isActive = route.name === item.match;
               return (
                 <a
                   key={item.href}
-                  href={href}
+                  href={item.href}
                   className={`link-uline text-sm uppercase tracking-[0.18em] transition-colors ${
                     isActive
                       ? "text-[var(--color-volt)]"
@@ -75,7 +74,7 @@ export function Header({ stageLabel, stageTotal, registerHref }: { stageLabel?: 
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`Follow ${site.channels.instagram[0].handle} on Instagram`}
-              className="hidden sm:inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-border-strong)] text-[var(--color-fg-muted)] transition-colors hover:border-[var(--color-volt)] hover:text-[var(--color-volt)]"
+              className="hidden sm:inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--color-border-strong)] text-[var(--color-fg-muted)] transition-colors hover:border-[var(--color-volt)] hover:text-[var(--color-volt)]"
             >
               <InstagramIcon className="h-4 w-4" />
             </a>
@@ -107,7 +106,7 @@ export function Header({ stageLabel, stageTotal, registerHref }: { stageLabel?: 
               onClick={() => setMenuOpen(!menuOpen)}
               aria-label={menuOpen ? "Close menu" : "Open menu"}
               aria-expanded={menuOpen}
-              className="lg:hidden relative flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-border-strong)] text-[var(--color-fg-muted)] transition-colors hover:border-[var(--color-volt)] hover:text-[var(--color-volt)]"
+              className="lg:hidden relative flex h-11 w-11 items-center justify-center rounded-full border border-[var(--color-border-strong)] text-[var(--color-fg-muted)] transition-colors hover:border-[var(--color-volt)] hover:text-[var(--color-volt)]"
             >
               <span className="sr-only">{menuOpen ? "Close" : "Menu"}</span>
               <span
@@ -154,9 +153,8 @@ export function Header({ stageLabel, stageTotal, registerHref }: { stageLabel?: 
           }`}
         >
           <ul className="flex flex-col gap-1">
-            {site.nav.map((item, i) => {
-              const isActive = active === item.href.replace("#", "");
-              const href = isMySchedulePage ? `${import.meta.env.BASE_URL}${item.href}` : item.href;
+            {NAV.map((item, i) => {
+              const isActive = route.name === item.match;
               return (
                 <li
                   key={item.href}
@@ -168,7 +166,7 @@ export function Header({ stageLabel, stageTotal, registerHref }: { stageLabel?: 
                   }`}
                 >
                   <a
-                    href={href}
+                    href={item.href}
                     onClick={() => setMenuOpen(false)}
                     className={`block py-3 text-sm uppercase tracking-[0.18em] transition-colors ${
                       isActive
