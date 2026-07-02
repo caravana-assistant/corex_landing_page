@@ -13,6 +13,7 @@ interface StageConfigRow {
   maps_href: string | null;
   register_href: string | null;
   event_id: string | null;
+  registration_open: boolean | null;
   time_window: string | null;
   rulebook_href: string | null;
   event_briefing_href: string | null;
@@ -68,6 +69,9 @@ export function useStageConfig(): {
           mapsHref: cfg.maps_href ?? s.mapsHref,
           registerHref: cfg.register_href ?? s.registerHref,
           eventId: cfg.event_id ?? s.eventId,
+          // Column added in COR-217 migration; may be absent from the row until it lands —
+          // default true so today's live Register CTA keeps working unchanged.
+          registrationOpen: cfg.registration_open ?? true,
           timeWindow: cfg.time_window ?? s.timeWindow,
           rulebookHref: cfg.rulebook_href ?? s.rulebookHref,
           eventBriefingHref: cfg.event_briefing_href ?? s.eventBriefingHref,

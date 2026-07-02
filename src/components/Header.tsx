@@ -1,13 +1,23 @@
 import { useState, useEffect } from "react";
+import { Link, NavLink } from "react-router-dom";
 import { site } from "@/lib/site";
 import { InstagramIcon } from "@/components/icons";
-import { useActiveSection } from "@/lib/useActiveSection";
 
-const NAV_IDS = site.nav.map((n) => n.href.replace("#", ""));
+type Props = {
+  stageLabel?: string;
+  stageTotal?: number;
+  registerHref?: string;
+  /** COR-217: when false, the primary CTA becomes "Event Schedule" -> /stages. */
+  registrationOpen?: boolean;
+};
 
-export function Header({ stageLabel, stageTotal, registerHref }: { stageLabel?: string; stageTotal?: number; registerHref?: string }) {
-  const active = useActiveSection(NAV_IDS);
+export function Header({ stageLabel, stageTotal, registerHref, registrationOpen = true }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const navLinkClass = ({ isActive }: { isActive: boolean }) =>
+    `link-uline text-sm uppercase tracking-[0.18em] transition-colors ${
+      isActive ? "text-[var(--color-volt)]" : "text-[var(--color-fg-muted)] hover:text-[var(--color-fg)]"
+    }`;
 
   // Lock body scroll when drawer is open
   useEffect(() => {
@@ -29,11 +39,7 @@ export function Header({ stageLabel, stageTotal, registerHref }: { stageLabel?: 
     <>
       <header className="fixed inset-x-0 top-0 z-50 border-b border-[var(--color-border)] bg-black/75 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-5 md:h-20 md:px-10">
-          <a
-            href="#top"
-            aria-label="CoreX Home"
-            className="flex items-center gap-3"
-          >
+          <Link to="/" aria-label="CoreX Home" className="flex items-center gap-3">
             <img
               src="/landingnodejs/brand/logo.png"
               alt="CoreX"
@@ -42,26 +48,15 @@ export function Header({ stageLabel, stageTotal, registerHref }: { stageLabel?: 
             <span className="eyebrow hidden sm:inline-block border-l border-[var(--color-border-strong)] pl-3">
               {stageLabel ?? site.stage.label} / {String(stageTotal ?? site.stage.total).padStart(2, "0")}
             </span>
-          </a>
+          </Link>
 
           {/* Desktop nav */}
           <nav className="hidden lg:flex items-center gap-8">
-            {site.nav.map((item) => {
-              const isActive = active === item.href.replace("#", "");
-              return (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  className={`link-uline text-sm uppercase tracking-[0.18em] transition-colors ${
-                    isActive
-                      ? "text-[var(--color-volt)]"
-                      : "text-[var(--color-fg-muted)] hover:text-[var(--color-fg)]"
-                  }`}
-                >
-                  {item.label}
-                </a>
-              );
-            })}
+            {site.nav.map((item) => (
+              <NavLink key={item.href} to={item.href} className={navLinkClass}>
+                {item.label}
+              </NavLink>
+            ))}
           </nav>
 
           <div className="flex items-center gap-3 md:gap-4">
@@ -85,7 +80,7 @@ export function Header({ stageLabel, stageTotal, registerHref }: { stageLabel?: 
                 <span className="h-1.5 w-1.5 rounded-full bg-amber-300" />
                 {site.postponed.pill}
               </a>
-            ) : (
+            ) : registrationOpen ? (
               <a
                 href={registerHref ?? site.cta.primary.href}
                 target="_blank"
@@ -94,6 +89,10 @@ export function Header({ stageLabel, stageTotal, registerHref }: { stageLabel?: 
               >
                 {site.cta.primary.label}
               </a>
+            ) : (
+              <Link to="/stages" className="btn-volt text-xs md:text-sm">
+                Event Schedule
+              </Link>
             )}
 
             {/* Hamburger button — mobile only */}
@@ -149,32 +148,27 @@ export function Header({ stageLabel, stageTotal, registerHref }: { stageLabel?: 
           }`}
         >
           <ul className="flex flex-col gap-1">
-            {site.nav.map((item, i) => {
-              const isActive = active === item.href.replace("#", "");
-              return (
-                <li
-                  key={item.href}
-                  style={{ transitionDelay: menuOpen ? `${i * 50}ms` : "0ms" }}
-                  className={`transition-all duration-300 ${
-                    menuOpen
-                      ? "translate-x-0 opacity-100"
-                      : "translate-x-4 opacity-0"
-                  }`}
+            {site.nav.map((item, i) => (
+              <li
+                key={item.href}
+                style={{ transitionDelay: menuOpen ? `${i * 50}ms` : "0ms" }}
+                className={`transition-all duration-300 ${
+                  menuOpen ? "translate-x-0 opacity-100" : "translate-x-4 opacity-0"
+                }`}
+              >
+                <NavLink
+                  to={item.href}
+                  onClick={() => setMenuOpen(false)}
+                  className={({ isActive }) =>
+                    `block py-3 text-sm uppercase tracking-[0.18em] transition-colors ${
+                      isActive ? "text-[var(--color-volt)]" : "text-[var(--color-fg-muted)] hover:text-[var(--color-fg)]"
+                    }`
+                  }
                 >
-                  <a
-                    href={item.href}
-                    onClick={() => setMenuOpen(false)}
-                    className={`block py-3 text-sm uppercase tracking-[0.18em] transition-colors ${
-                      isActive
-                        ? "text-[var(--color-volt)]"
-                        : "text-[var(--color-fg-muted)] hover:text-[var(--color-fg)]"
-                    }`}
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              );
-            })}
+                  {item.label}
+                </NavLink>
+              </li>
+            ))}
           </ul>
 
           {/* Instagram link in drawer */}

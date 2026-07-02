@@ -34,6 +34,8 @@ export type Stage = {
   recap?: { athletes: number; divisions: number; lanes?: number };
   photos: GalleryPhoto[];
   eventId?: string;
+  /** Header CTA: true = "Register" button; false = "Event Schedule" link to /stages. */
+  registrationOpen?: boolean;
   timeWindow?: string;
   // Workout is opt-in per stage: the timeline + weights show ONLY when
   // workoutConfirmed is true (the content lives in Workout.tsx). Default/absent

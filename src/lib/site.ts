@@ -45,12 +45,12 @@ export const site = {
     },
     secondary: { label: "Watch Stage 1 Highlights", href: "#highlights" },
   },
+  // COR-217: routed pages (menu bar), not scroll anchors. Workout/Rulebook/Schedule/
+  // Venue sections still live inside /stages (StageDetail) — deep-link via that page.
   nav: [
-    { label: "Stages", href: "#season" },
-    { label: "Workout", href: "#workout" },
-    { label: "Rulebook", href: "#rulebook" },
-    { label: "Schedule", href: "#schedule" },
-    { label: "Venue", href: "#venue" },
+    { label: "Stages", href: "/stages" },
+    { label: "Results", href: "/results" },
+    { label: "My CoreX", href: "/my-corex" },
   ],
   channels: {
     email: "CoreX@adsc.adgov.gov.ae",
@@ -73,6 +73,25 @@ export const site = {
     links: [],
   },
 } as const;
+
+// `site` is `as const` (every field a literal type) so callers get autocomplete
+// on the static config. Pages that receive a MERGED site (static defaults +
+// dynamic stage overrides, whose fields are plain `string`/`number`) need the
+// widened shape instead — literal types would reject the merged object.
+// Note: mapped-over objects (incl. tuples/arrays, which are objects) preserve
+// their shape via `{[K in keyof T]: ...}` — no separate array branch needed
+// (an explicit array branch here collapses heterogeneous tuples to a union).
+type Widen<T> = T extends object
+  ? { [K in keyof T]: Widen<T[K]> }
+  : T extends string
+    ? string
+    : T extends number
+      ? number
+      : T extends boolean
+        ? boolean
+        : T;
+
+export type SiteConfig = Widen<typeof site>;
 
 // ---------------------------------------------------------------------------
 // Helper: derive site-compatible overrides from a dynamic Stage
